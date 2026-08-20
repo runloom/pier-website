@@ -18,7 +18,7 @@ export const en: Dict = {
     github: "GitHub",
   },
   hero: {
-    badge: "macOS · Apple Silicon / Intel · Open source (AGPL-3.0)",
+    badge: "macOS · Apple Silicon / Intel",
     title: "The local AI dev workbench",
     sub: "Keep Claude Code, Codex, OpenCode and other native CLIs running in your local projects — watch status, return to the terminal, and review Git changes in one saveable workspace.",
     ctaDownload: "Download for macOS",
@@ -153,7 +153,7 @@ export const en: Dict = {
     fallback: "Browse all releases on GitHub",
     macOnly: "The desktop app currently supports macOS only (Apple Silicon / Intel).",
     cliPathNote:
-      "Releases don't modify your shell PATH. For the local CLI, run /Applications/Pier.app/Contents/Resources/bin/pier directly.",
+      "The packaged app tries to put pier on your PATH at launch. If the command is missing, install it in Settings → Terminal.",
     sourceTitle: "Or run from source",
     sourceReqs: "Requires Node ^24.15, pnpm ≥11.12, Xcode Command Line Tools, Homebrew, and zig@0.15.",
     sourceLines: [
@@ -183,10 +183,6 @@ export const en: Dict = {
         q: "Where does my data live?",
         a: "Everything stays local: preferences and layouts are local JSON files, raw terminal output is written to local segment files, code changes are read live from Git, and secrets go to the system's secure storage.",
       },
-      {
-        q: "What's the license?",
-        a: "The source is released under AGPL-3.0-only. Closed-source distribution, white-labeling, enterprise support, or rights beyond AGPLv3 require a separate commercial agreement.",
-      },
     ],
   },
   footer: {
@@ -211,7 +207,6 @@ export const en: Dict = {
       trademarks: "Trademarks",
       licensing: "Licensing",
     },
-    note: "Source released under AGPL-3.0-only; closed-source distribution, white-labeling, or enterprise support require a separate commercial agreement.",
   },
   a11y: {
     skip: "Skip to content",

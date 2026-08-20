@@ -42,7 +42,7 @@ const svg = `<?xml version="1.0" encoding="UTF-8"?>
 
   <text x="600" y="472" text-anchor="middle" font-family="PingFang SC, Helvetica Neue, sans-serif" font-size="31" fill="#a2acc2">本地 AI 开发工作台 · The local AI dev workbench</text>
 
-  <text x="600" y="564" text-anchor="middle" font-family="Menlo, monospace" font-size="20" letter-spacing="2" fill="#69748f">macOS · Apple Silicon / Intel · Open Source · AGPL-3.0</text>
+  <text x="600" y="564" text-anchor="middle" font-family="Menlo, monospace" font-size="20" letter-spacing="2" fill="#69748f">macOS · Apple Silicon / Intel</text>
 </svg>`;
 
 await sharp(Buffer.from(svg), { density: 72 })

@@ -18,7 +18,7 @@ export const ja: Dict = {
     github: "GitHub",
   },
   hero: {
-    badge: "macOS · Apple Silicon / Intel · オープンソース（AGPL-3.0）",
+    badge: "macOS · Apple Silicon / Intel",
     title: "ローカル AI 開発ワークベンチ",
     sub: "Claude Code、Codex、OpenCode などのネイティブ CLI をローカルプロジェクトで動かし続け、状態を見て、ターミナルに戻り、Git の変更を同じ保存可能なワークスペースでレビューします。",
     ctaDownload: "macOS 版をダウンロード",
@@ -153,7 +153,7 @@ export const ja: Dict = {
     fallback: "GitHub Releases ですべてのバージョンを見る",
     macOnly: "デスクトップ版は現在 macOS のみです（Apple Silicon / Intel）。",
     cliPathNote:
-      "リリース版はシェルの PATH を自動では変えません。ローカル CLI は /Applications/Pier.app/Contents/Resources/bin/pier を直接実行してください。",
+      "リリース版は起動時に pier コマンドを PATH へ入れようとします。まだ無い場合は「設定 → ターミナル」からインストールできます。",
     sourceTitle: "またはソースから実行",
     sourceReqs: "Node ^24.15、pnpm ≥11.12、Xcode Command Line Tools、Homebrew、zig@0.15 が必要です。",
     sourceLines: [
@@ -183,10 +183,6 @@ export const ja: Dict = {
         q: "データはどこにありますか？",
         a: "すべてローカルです。設定と配置はローカル JSON、ターミナル出力はローカルの分割ファイル、コード変更は Git からリアルタイムに読み、秘密はシステムの安全な保存に渡します。",
       },
-      {
-        q: "ライセンスは何ですか？",
-        a: "ソースは AGPL-3.0-only です。クローズドソース配布、ホワイトラベル、企業サポート、AGPLv3 を超える権利には別の商業契約が必要です。",
-      },
     ],
   },
   footer: {
@@ -211,7 +207,6 @@ export const ja: Dict = {
       trademarks: "商標",
       licensing: "ライセンス説明",
     },
-    note: "ソースは AGPL-3.0-only。クローズドソース配布、ホワイトラベル、企業サポートには別の商業契約が必要です。",
   },
   a11y: {
     skip: "本文へスキップ",

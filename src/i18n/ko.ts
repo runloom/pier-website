@@ -18,7 +18,7 @@ export const ko: Dict = {
     github: "GitHub",
   },
   hero: {
-    badge: "macOS · Apple Silicon / Intel · 오픈 소스(AGPL-3.0)",
+    badge: "macOS · Apple Silicon / Intel",
     title: "로컬 AI 개발 워크벤치",
     sub: "Claude Code, Codex, OpenCode 같은 네이티브 CLI를 로컬 프로젝트에서 계속 실행하고, 상태를 보고, 터미널로 돌아가 Git 변경을 같은 저장 가능한 워크스페이스에서 검토하세요.",
     ctaDownload: "macOS 버전 다운로드",
@@ -153,7 +153,7 @@ export const ko: Dict = {
     fallback: "GitHub Releases에서 모든 버전 보기",
     macOnly: "데스크톱 앱은 현재 macOS만 지원합니다(Apple Silicon / Intel).",
     cliPathNote:
-      "릴리스는 셸 PATH를 자동으로 바꾸지 않습니다. 로컬 CLI는 /Applications/Pier.app/Contents/Resources/bin/pier를 직접 실행하세요.",
+      "출시판은 시작할 때 pier 명령을 PATH에 넣으려 합니다. 없다면 설정 → 터미널에서 설치하세요.",
     sourceTitle: "또는 소스에서 실행",
     sourceReqs: "Node ^24.15, pnpm ≥11.12, Xcode Command Line Tools, Homebrew, zig@0.15가 필요합니다.",
     sourceLines: [
@@ -183,10 +183,6 @@ export const ko: Dict = {
         q: "데이터는 어디에 있나요?",
         a: "모두 로컬입니다. 설정과 레이아웃은 로컬 JSON, 터미널 출력은 로컬 구간 파일, 코드 변경은 Git에서 실시간으로 읽고, 비밀은 시스템 보안 저장소로 갑니다.",
       },
-      {
-        q: "라이선스는 무엇인가요?",
-        a: "소스는 AGPL-3.0-only입니다. 클로즈드 소스 배포, 화이트 라벨, 기업 지원, AGPLv3을 넘는 권리는 별도 상업 계약이 필요합니다.",
-      },
     ],
   },
   footer: {
@@ -211,7 +207,6 @@ export const ko: Dict = {
       trademarks: "상표",
       licensing: "라이선스 설명",
     },
-    note: "소스는 AGPL-3.0-only. 클로즈드 소스 배포, 화이트 라벨, 기업 지원은 별도 상업 계약이 필요합니다.",
   },
   a11y: {
     skip: "본문으로 건너뛰기",

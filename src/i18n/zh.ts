@@ -16,7 +16,7 @@ export const zh = {
     github: "GitHub",
   },
   hero: {
-    badge: "macOS · Apple Silicon / Intel · AGPL-3.0 开源",
+    badge: "macOS · Apple Silicon / Intel",
     title: "本地 AI 开发工作台",
     sub: "让 Claude Code、Codex、OpenCode 等原生 CLI 在本地项目中持续运行；在同一个可保存的工作区查看状态、回到终端并审查 Git 变更。",
     ctaDownload: "下载 macOS 版",
@@ -151,7 +151,7 @@ export const zh = {
     fallback: "在 GitHub Releases 查看全部版本",
     macOnly: "目前桌面端仅支持 macOS（Apple Silicon / Intel）。",
     cliPathNote:
-      "发布版不会自动修改 Shell 的 PATH。如需本机 CLI，可直接运行 /Applications/Pier.app/Contents/Resources/bin/pier。",
+      "发布版启动后会尽量把 pier 命令装到 PATH。若终端里还没有，可在设置 → 终端中安装。",
     sourceTitle: "或从源码运行",
     sourceReqs: "需要 Node ^24.15、pnpm ≥11.12、Xcode Command Line Tools、Homebrew 与 zig@0.15。",
     sourceLines: [
@@ -181,10 +181,6 @@ export const zh = {
         q: "我的数据存在哪里？",
         a: "全部在本地：偏好与布局存为本地 JSON 文件，终端原始输出写本地分段文件，代码变更实时读取 Git，密钥交给系统安全存储。",
       },
-      {
-        q: "开源协议是什么？",
-        a: "源码按 AGPL-3.0-only 发布。闭源分发、白标、企业支持或 AGPLv3 之外的权利需要单独商业协议。",
-      },
     ],
   },
   footer: {
@@ -209,7 +205,6 @@ export const zh = {
       trademarks: "商标说明",
       licensing: "授权说明",
     },
-    note: "源码按 AGPL-3.0-only 发布；闭源分发、白标或企业支持需要单独商业协议。",
   },
   a11y: {
     skip: "跳到主要内容",
