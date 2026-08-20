@@ -1,6 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import heroShot from "../assets/hero.png";
 import { getDict, REPO, type Locale } from "../i18n";
-import AppMockup from "./AppMockup.astro";
 
 interface Props {
   locale: Locale;
@@ -54,8 +55,19 @@ const dict = getDict(locale);
       <p class="mt-5 font-mono text-[12px] text-faint">{dict.hero.hint}</p>
     </div>
 
-    <div class="mx-auto mt-16 max-w-6xl" data-reveal>
-      <AppMockup locale={locale} />
+    <div class="hero-shot relative mx-auto mt-16 max-w-6xl" data-reveal>
+      <Image
+        src={heroShot}
+        alt={dict.hero.shotAlt}
+        class="hero-shot-img relative z-10 h-auto w-full"
+        quality={82}
+        widths={[720, 1080, 1440, 1920, 2400]}
+        sizes="(min-width: 1152px) 1152px, 92vw"
+      />
+      <div
+        class="-bottom-10 pointer-events-none absolute inset-x-10 h-10 rounded-[100%] bg-[radial-gradient(50%_100%_at_50%_0%,rgba(133,73,255,0.28),transparent_70%)] blur-md"
+      >
+      </div>
     </div>
   </div>
 </section>

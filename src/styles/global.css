@@ -393,6 +393,11 @@ body {
   background: var(--panel);
 }
 
+/* 首屏产品截图：跟随圆角透明边做投影，避免再套一层假窗口 */
+.hero-shot-img {
+  filter: drop-shadow(0 28px 64px color-mix(in oklab, #030610 62%, transparent));
+}
+
 /* 滚动条（桌面 WebKit / Firefox） */
 * {
   scrollbar-width: thin;

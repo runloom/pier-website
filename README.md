@@ -22,7 +22,8 @@ src/
 ├── styles/global.css      # 设计系统：主题令牌（明/暗）、氛围纹理、动效原语
 ├── i18n/                  # zh（默认）/ en 全量文案字典 + locale 工具
 ├── layouts/Base.astro     # SEO head（canonical/hreflang/OG/JSON-LD）+ 主题防闪烁 + 语言跳转
-├── components/            # Hero、AppMockup、Workflow、Features、Download 等区块
+├── assets/hero.png        # 首屏产品截图（构建时由 astro:assets 出多尺寸）
+├── components/            # Hero、Workflow、Features、Download 等区块
 └── pages/                 # /（中文）、/en/、/404
 scripts/generate-og.mjs    # 生成 public/og.png（改文案后重跑并提交产物）
 ```
@@ -37,7 +38,7 @@ scripts/generate-og.mjs    # 生成 public/og.png（改文案后重跑并提交�
 ## 主题
 
 `light / dark / system` 三态，`localStorage`（`pier-theme`）持久化，`<head>` 内联脚本防闪烁。
-产品 mockup 与终端演示固定深色（`class="dark"` 局部作用域），与产品形态一致。
+首屏使用真实产品窗口截图（`src/assets/hero.png`），深色工作区与产品默认形态一致。
 
 ## 部署（GitHub Pages）
 
