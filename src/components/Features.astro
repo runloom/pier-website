@@ -1,0 +1,63 @@
+---
+import { getDict, type Locale } from "../i18n";
+import SectionHead from "./SectionHead.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const dict = getDict(Astro.props.locale);
+const { features } = dict;
+
+/** 六个能力的线性图标（与 items 顺序一一对应）。 */
+const icons = [
+  // 原生终端
+  `<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M7 10l3 2.5L7 15M12.5 15.5H17"/>`,
+  // 会话状态
+  `<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="M12 3.5V7M12 17v3.5M3.5 12H7"/>`,
+  // 并行隔离（工作树）
+  `<circle cx="6.5" cy="5.5" r="2.2"/><circle cx="6.5" cy="18.5" r="2.2"/><circle cx="17.5" cy="9" r="2.2"/><path d="M6.5 7.7v8.6M6.5 12c0-2 1.5-3 3.5-3h5.3"/>`,
+  // 文件与变更
+  `<path d="M13.5 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13.5 3.5V9H19M9.5 13.5h5M12 11v5"/>`,
+  // Canvas
+  `<rect x="3.5" y="4" width="17" height="13" rx="2"/><path d="M7.5 13.5l2.8-3.4 2.2 2.4 2.5-3 2.5 4M8.5 20h7"/>`,
+  // 可保存布局
+  `<rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M10.5 3.5v17M10.5 12H21"/>`,
+];
+---
+
+<section id="features" class="relative">
+  <div class="mx-auto max-w-6xl px-5 py-24 sm:py-28">
+    <SectionHead no={features.no} label={features.label} title={features.title} />
+
+    <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        features.items.map((item, i) => (
+          <article
+            class="group relative rounded-xl border border-line bg-panel/55 p-6 transition-colors duration-300 hover:border-[color-mix(in_oklab,var(--brand)_38%,var(--line-strong))]"
+            data-reveal
+            style={`--reveal-delay: ${(i % 3) * 0.08}s`}
+          >
+            <div class="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(60%_45%_at_50%_0%,color-mix(in_oklab,var(--brand)_9%,transparent),transparent_70%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div class="relative">
+              <div class="inline-flex size-10 items-center justify-center rounded-lg border border-line-strong bg-panel-2 text-brand-ink">
+                <svg
+                  viewBox="0 0 24 24"
+                  class="size-5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  set:html={icons[i]}
+                />
+              </div>
+              <h3 class="display mt-4.5 text-[17px]">{item.title}</h3>
+              <p class="mt-2 text-[13.5px] text-muted leading-relaxed">{item.body}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

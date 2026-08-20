@@ -1,0 +1,41 @@
+---
+import { getDict, type Locale } from "../i18n";
+import SectionHead from "./SectionHead.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const dict = getDict(Astro.props.locale);
+const { faq } = dict;
+---
+
+<section id="faq" class="relative border-line border-t bg-bg-deep/50">
+  <div class="mx-auto max-w-3xl px-5 py-24 sm:py-28">
+    <SectionHead label={faq.label} title={faq.title} center />
+
+    <div class="mt-12" data-reveal>
+      {
+        faq.items.map((item) => (
+          <details class="group border-line border-b py-1 first:border-t">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 text-[15px] marker:hidden [&::-webkit-details-marker]:hidden">
+              <span class="font-medium">{item.q}</span>
+              <svg
+                viewBox="0 0 24 24"
+                class="size-4 flex-none text-faint transition-transform duration-200 group-open:rotate-45"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </summary>
+            <p class="prose-measure pb-5 text-[14px] text-muted leading-relaxed">{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

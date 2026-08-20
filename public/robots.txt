@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://runloom.github.io/pier-website/sitemap-index.xml

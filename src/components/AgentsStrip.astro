@@ -1,0 +1,36 @@
+---
+import { getDict, type Locale } from "../i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const dict = getDict(Astro.props.locale);
+const items = [...dict.agents.names, dict.agents.more];
+---
+
+<section class="border-line border-y bg-bg-deep/60 py-10">
+  <p class="text-center font-mono text-[11.5px] text-faint uppercase tracking-[0.2em]">
+    {dict.agents.label}
+  </p>
+  <div
+    class="marquee mt-6 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]"
+  >
+    <div class="marquee-track flex w-max items-center">
+      {
+        [0, 1].map((copy) => (
+          <div class="flex items-center" aria-hidden={copy === 1 ? "true" : undefined}>
+            {items.map((name) => (
+              <span class="flex items-center">
+                <span class="display-wide whitespace-nowrap px-7 text-[17px] text-muted sm:text-[19px]">
+                  {name}
+                </span>
+                <span class="size-1.5 rotate-45 bg-brand/60" />
+              </span>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

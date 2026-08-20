@@ -1,0 +1,51 @@
+---
+import { getDict, type Locale } from "../i18n";
+import SectionHead from "./SectionHead.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const dict = getDict(Astro.props.locale);
+const { boundaries } = dict;
+---
+
+<section class="relative">
+  <div class="mx-auto max-w-6xl px-5 py-24 sm:py-28">
+    <SectionHead label={boundaries.label} title={boundaries.title} lead={boundaries.lead} center />
+
+    <div class="mx-auto mt-14 grid max-w-4xl gap-4 sm:grid-cols-3">
+      {
+        boundaries.items.map((item, i) => (
+          <article
+            class="rounded-xl border border-line bg-panel/40 p-6"
+            data-reveal
+            style={`--reveal-delay: ${i * 0.08}s`}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              class="size-5 text-faint"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="8.5" />
+              <path d="M6 6l12 12" />
+            </svg>
+            <h3 class="display mt-3.5 text-[16px]">{item.title}</h3>
+            <p class="mt-2 text-[13.5px] text-muted leading-relaxed">{item.body}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    <p
+      class="mx-auto mt-12 max-w-2xl text-center font-mono text-[13px] text-brand-ink leading-relaxed"
+      data-reveal
+    >
+      {boundaries.closing}
+    </p>
+  </div>
+</section>

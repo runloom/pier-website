@@ -1,0 +1,400 @@
+/* Pier 官网设计系统 — “夜港 / Night Harbor”
+   深墨蓝海面 + 紫罗兰泊位光（品牌渐变）+ 港口标牌排版（Archivo 宽轴）
+   + 终端等宽细节（JetBrains Mono）。中文正文走系统栈（PingFang 渲染最佳、零下载）。 */
+
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource-variable/jetbrains-mono";
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------- 主题令牌 ---------------------------------- */
+
+:root {
+  /* daylight pier（亮） */
+  --bg: #f6f7fb;
+  --bg-deep: #eceef6;
+  --panel: #ffffff;
+  --panel-2: #f1f3f9;
+  --line: color-mix(in oklab, #182035 11%, transparent);
+  --line-strong: color-mix(in oklab, #182035 20%, transparent);
+  --fg: #141927;
+  --fg-muted: #4b5468;
+  --fg-faint: #838da3;
+  --brand-hi: #9a4dff;
+  --brand: #6d3bf5;
+  --brand-deep: #4a24d6;
+  --brand-ink: #5c2fe8;
+  --glow: rgba(109, 59, 245, 0.14);
+  --screen: #0a0f1d;
+  --st-run: #3562d4;
+  --st-needs: #b25f00;
+  --st-error: #d43d3d;
+  --st-done: #177d4b;
+  --term-green: #1f9e57;
+  --shadow-panel: 0 1px 2px rgba(16, 20, 38, 0.05), 0 12px 40px -18px rgba(16, 20, 38, 0.25);
+  color-scheme: light;
+}
+
+.dark {
+  /* night harbor（暗，设计主形态） */
+  --bg: #070b15;
+  --bg-deep: #04060d;
+  --panel: #0c1120;
+  --panel-2: #101725;
+  --line: rgba(210, 222, 255, 0.09);
+  --line-strong: rgba(210, 222, 255, 0.17);
+  --fg: #e9edf6;
+  --fg-muted: #a2acc2;
+  --fg-faint: #69748f;
+  --brand-hi: #b66cff;
+  --brand: #8549ff;
+  --brand-deep: #542ee5;
+  --brand-ink: #c9a4ff;
+  --glow: rgba(133, 73, 255, 0.32);
+  --screen: #040b18;
+  --st-run: #8ab4ff;
+  --st-needs: #ffb156;
+  --st-error: #ff6d6d;
+  --st-done: #56d38c;
+  --term-green: #7ce38b;
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -24px rgba(2, 4, 12, 0.9);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-deep: var(--bg-deep);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-faint: var(--fg-faint);
+  --color-brand: var(--brand);
+  --color-brand-hi: var(--brand-hi);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-ink: var(--brand-ink);
+  --color-screen: var(--screen);
+  --color-run: var(--st-run);
+  --color-needs: var(--st-needs);
+  --color-error: var(--st-error);
+  --color-done: var(--st-done);
+  --color-term-green: var(--term-green);
+
+  --font-display:
+    "Archivo Variable", -apple-system, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", system-ui, sans-serif;
+  --font-body:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo,
+    "PingFang SC", monospace;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------- 基础 ---------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--brand) 30%, transparent);
+  color: var(--fg);
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--brand) 65%, var(--fg));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* 展示字：港口标牌 — 宽轴 Archivo，中文回退系统黑体加字重 */
+.display {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 118;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  text-wrap: balance;
+  /* 中文只在空格与标点处断行，避免词中折行 */
+  word-break: keep-all;
+}
+
+.display-wide {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 125;
+  font-weight: 700;
+}
+
+.prose-measure {
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* 章节编号标签：航海图注记 */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-label::before {
+  content: "";
+  display: block;
+  width: 2rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--brand), transparent);
+}
+
+.section-label > em {
+  font-style: normal;
+  color: var(--brand-ink);
+}
+
+/* ---------------------------------- 氛围 ---------------------------------- */
+
+/* 航海图网格：细十字线 + 径向淡出 */
+.chart-grid {
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 30%, transparent 78%);
+}
+
+/* 泊位光：hero 后方的品牌紫辉光 */
+.berth-glow {
+  background:
+    radial-gradient(42% 50% at 50% 38%, var(--glow), transparent 70%),
+    radial-gradient(28% 34% at 68% 22%, color-mix(in oklab, var(--brand-hi) 18%, transparent), transparent 72%);
+}
+
+/* 颗粒噪点：极低透明度，给深色面加“物质感” */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.055'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 水平线：hairline 分隔 */
+.rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong) 18%, var(--line-strong) 82%, transparent);
+}
+
+/* ---------------------------------- 动效 ---------------------------------- */
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 首屏入场：staggered reveal（无 JS，直接播放） */
+.intro > * {
+  animation: rise-in 0.9s var(--ease-out-soft) both;
+}
+
+.intro > *:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.intro > *:nth-child(3) {
+  animation-delay: 0.16s;
+}
+.intro > *:nth-child(4) {
+  animation-delay: 0.24s;
+}
+.intro > *:nth-child(5) {
+  animation-delay: 0.32s;
+}
+
+/* 滚动显现：IO 脚本给 [data-reveal] 加 .is-in */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.8s var(--ease-out-soft),
+    transform 0.8s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro > * {
+    animation: none;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* 终端光标 */
+@keyframes caret-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  vertical-align: -0.18em;
+  background: var(--term-green);
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+/* 状态点脉冲（需要你处理） */
+@keyframes ping-soft {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, currentColor 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+  flex: none;
+}
+
+.dot-pulse {
+  animation: ping-soft 1.6s var(--ease-out-soft) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret,
+  .dot-pulse {
+    animation: none;
+  }
+}
+
+/* 智能体条带跑马灯 */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 36s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ---------------------------------- 控件 ---------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1;
+  border-radius: 10px;
+  padding: 0.875rem 1.375rem;
+  transition:
+    transform 0.15s var(--ease-out-soft),
+    box-shadow 0.2s var(--ease-out-soft),
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand-hi), var(--brand) 55%, var(--brand-deep));
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 8px 24px -8px color-mix(in oklab, var(--brand) 70%, transparent);
+}
+
+.btn-primary:hover {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 10px 32px -8px color-mix(in oklab, var(--brand) 85%, transparent);
+}
+
+.btn-ghost {
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+  background: color-mix(in oklab, var(--panel) 65%, transparent);
+}
+
+.btn-ghost:hover {
+  border-color: color-mix(in oklab, var(--brand) 45%, var(--line-strong));
+  background: var(--panel);
+}
+
+/* 滚动条（桌面 WebKit / Firefox） */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--fg) 22%, var(--bg)) transparent;
+}

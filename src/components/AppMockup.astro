@@ -1,0 +1,161 @@
+---
+import { getDict, type Locale } from "../i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const mock = getDict(Astro.props.locale).mock;
+
+const statusText: Record<string, string> = {
+  run: "text-run",
+  needs: "text-needs",
+  error: "text-error",
+  done: "text-done",
+};
+---
+
+<!-- 应用窗口固定为产品深色形态：dark 类把令牌作用域切到暗色 -->
+<div class="dark relative" aria-hidden="true">
+  <div
+    class="relative overflow-hidden rounded-xl border border-line-strong bg-panel-2 shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_40px_90px_-30px_rgba(3,6,16,0.85)]"
+  >
+    <!-- 标题栏 -->
+    <div class="relative flex h-9 items-center border-line border-b bg-panel px-3.5">
+      <div class="flex items-center gap-1.5">
+        <span class="size-2.5 rounded-full bg-[#ff5f57]/80"></span>
+        <span class="size-2.5 rounded-full bg-[#febc2e]/80"></span>
+        <span class="size-2.5 rounded-full bg-[#28c840]/80"></span>
+      </div>
+      <span class="-translate-x-1/2 absolute left-1/2 font-mono text-[11px] text-faint">
+        {mock.windowTitle}
+      </span>
+    </div>
+
+    <!-- 三栏主体 -->
+    <div class="grid grid-cols-[minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)] lg:grid-cols-[186px_minmax(0,1fr)_236px]">
+      <!-- 侧栏：会话状态 -->
+      <aside class="hidden border-line border-r bg-panel/60 sm:block">
+        <p class="px-3.5 pt-3 pb-1.5 font-mono text-[10px] text-faint uppercase tracking-[0.18em]">
+          {mock.sidebarTitle}
+        </p>
+        <ul class="space-y-0.5 px-1.5 pb-3">
+          {
+            mock.sessions.map((s, i) => (
+              <li
+                class:list={[
+                  "relative rounded-md px-2 py-1.5",
+                  i === 0 && "bg-[rgba(133,73,255,0.14)]",
+                ]}
+              >
+                {i === 0 && (
+                  <span class="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-full bg-brand-hi" />
+                )}
+                <div class="flex items-center gap-2">
+                  <span class:list={["dot", statusText[s.kind], s.kind === "needs" && "dot-pulse"]} />
+                  <span class="font-mono text-[11.5px] text-fg">{s.agent}</span>
+                  <span class:list={["ml-auto text-[10px]", statusText[s.kind]]}>{s.status}</span>
+                </div>
+                <p class="mt-0.5 pl-[15px] font-mono text-[10px] text-faint">{s.branch}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+
+      <!-- 终端面板 -->
+      <section class="min-w-0 bg-screen">
+        <div class="flex items-center gap-0.5 border-line border-b bg-panel/80 px-2 pt-1.5">
+          <span
+            class="rounded-t-md border border-line border-b-0 bg-screen px-3 py-1.5 font-mono text-[10.5px] text-fg"
+          >
+            {mock.terminalTab}
+          </span>
+          <span class="px-3 py-1.5 font-mono text-[10.5px] text-faint">zsh · main</span>
+        </div>
+        <div class="space-y-1.5 px-4 py-3.5 font-mono text-[11.5px] leading-relaxed">
+          {
+            mock.termLines.map((line) => {
+              if (line.kind === "cmd") {
+                return (
+                  <p>
+                    <span class="text-term-green">❯</span>
+                    <span class="ml-2 text-fg">{line.text}</span>
+                  </p>
+                );
+              }
+              if (line.kind === "ok") {
+                return <p class="text-term-green">{line.text}</p>;
+              }
+              if (line.kind === "prompt") {
+                return (
+                  <p>
+                    <span class="text-term-green">❯</span>
+                    <span class="caret ml-2" />
+                  </p>
+                );
+              }
+              return <p class="text-muted">{line.text}</p>;
+            })
+          }
+        </div>
+      </section>
+
+      <!-- 变更面板 -->
+      <aside class="hidden min-w-0 border-line border-l bg-panel/60 lg:block">
+        <div class="flex items-baseline justify-between px-3.5 pt-3 pb-1.5">
+          <p class="font-mono text-[10px] text-faint uppercase tracking-[0.18em]">{mock.diffTitle}</p>
+          <p class="font-mono text-[10px] text-faint">{mock.diffTab}</p>
+        </div>
+        <ul class="px-2 pb-2">
+          {
+            mock.files.map((f, i) => (
+              <li class:list={["rounded-md px-1.5 py-1.5", i === 0 && "bg-[rgba(210,222,255,0.05)]"]}>
+                <div class="flex items-center gap-2">
+                  <span class="truncate font-mono text-[10.5px] text-fg">{f.name}</span>
+                  <span class="ml-auto font-mono text-[10px] text-done">+{f.add}</span>
+                  <span class="font-mono text-[10px] text-error">−{f.del}</span>
+                </div>
+                {i === 0 && (
+                  <div class="mt-1.5 space-y-px">
+                    <div class="h-[7px] w-[92%] rounded-sm bg-done/22" />
+                    <div class="h-[7px] w-[78%] rounded-sm bg-done/22" />
+                    <div class="h-[7px] w-[64%] rounded-sm bg-error/25" />
+                    <div class="h-[7px] w-[84%] rounded-sm bg-done/22" />
+                  </div>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="flex gap-1.5 px-3.5 pb-3.5">
+          <span class="rounded-md border border-line-strong px-2 py-1 font-mono text-[10px] text-muted">
+            {mock.stageHunk}
+          </span>
+          <span class="rounded-md border border-line-strong px-2 py-1 font-mono text-[10px] text-muted">
+            {mock.stageFile}
+          </span>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 状态栏 -->
+    <div class="flex h-7 items-center justify-between border-line border-t bg-panel px-3.5 font-mono text-[10px] text-faint">
+      <span class="flex items-center gap-1.5">
+        <svg viewBox="0 0 16 16" class="size-3" fill="currentColor" aria-hidden="true">
+          <path
+            d="M11.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm-2.25.75a2.25 2.25 0 1 1 3 2.122V6.5A2.5 2.5 0 0 1 10 9H6a1 1 0 0 0-1 1v.628a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.492 2.492 0 0 1 6 7.5h4a1 1 0 0 0 1-1v-1.128A2.25 2.25 0 0 1 9.5 3.25ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM3.5 3.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Z"
+          ></path>
+        </svg>
+        {mock.branch}
+      </span>
+      <span>{mock.statusBar}</span>
+    </div>
+  </div>
+
+  <!-- 泊位倒影：窗口下方的水面光 -->
+  <div
+    class="-bottom-10 absolute inset-x-10 h-10 rounded-[100%] bg-[radial-gradient(50%_100%_at_50%_0%,rgba(133,73,255,0.28),transparent_70%)] blur-md"
+  >
+  </div>
+</div>

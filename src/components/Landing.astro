@@ -1,0 +1,28 @@
+---
+import type { Locale } from "../i18n";
+import AgentsStrip from "./AgentsStrip.astro";
+import Boundaries from "./Boundaries.astro";
+import CliPlugins from "./CliPlugins.astro";
+import Download from "./Download.astro";
+import Faq from "./Faq.astro";
+import Features from "./Features.astro";
+import Hero from "./Hero.astro";
+import Why from "./Why.astro";
+import Workflow from "./Workflow.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Hero locale={locale} />
+<AgentsStrip locale={locale} />
+<Why locale={locale} />
+<Workflow locale={locale} />
+<Features locale={locale} />
+<CliPlugins locale={locale} />
+<Boundaries locale={locale} />
+<Download locale={locale} />
+<Faq locale={locale} />

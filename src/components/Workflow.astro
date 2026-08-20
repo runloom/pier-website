@@ -1,0 +1,38 @@
+---
+import { getDict, type Locale } from "../i18n";
+import SectionHead from "./SectionHead.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const dict = getDict(Astro.props.locale);
+const { workflow } = dict;
+---
+
+<section id="workflow" class="relative border-line border-t bg-bg-deep/50">
+  <div class="mx-auto max-w-6xl px-5 py-24 sm:py-28">
+    <SectionHead no={workflow.no} label={workflow.label} title={workflow.title} center />
+
+    <ol class="relative mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+      <!-- 航道连接线（桌面横向） -->
+      <div
+        class="absolute top-[18px] right-[12%] left-[12%] hidden border-line-strong border-t border-dashed lg:block"
+        aria-hidden="true"
+      >
+      </div>
+
+      {
+        workflow.steps.map((step, i) => (
+          <li class="relative" data-reveal style={`--reveal-delay: ${i * 0.09}s`}>
+            <div class="relative z-10 flex size-9 items-center justify-center rounded-lg border border-line-strong bg-panel font-mono text-[13px] text-brand-ink shadow-[0_0_0_5px_var(--bg)] lg:shadow-[0_0_0_6px_color-mix(in_oklab,var(--bg-deep)_50%,var(--bg))]">
+              {i + 1}
+            </div>
+            <h3 class="display mt-4 text-[17px]">{step.title}</h3>
+            <p class="mt-2 text-[13.5px] text-muted leading-relaxed">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

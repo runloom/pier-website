@@ -1,0 +1,91 @@
+---
+import { getDict, LINKS, REPO, withBase, type Locale } from "../i18n";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = getDict(locale);
+const t = dict.footer.links;
+
+const columns = [
+  {
+    title: dict.footer.product,
+    links: [
+      { label: t.download, href: "#download", external: false },
+      { label: t.releases, href: LINKS.releases, external: true },
+      { label: t.changelog, href: LINKS.changelog, external: true },
+    ],
+  },
+  {
+    title: dict.footer.docs,
+    links: [
+      { label: t.docsIndex, href: LINKS.docsIndex, external: true },
+      { label: t.cliManual, href: LINKS.cliManual, external: true },
+      { label: t.plugins, href: LINKS.plugins, external: true },
+      { label: t.development, href: LINKS.development, external: true },
+    ],
+  },
+  {
+    title: dict.footer.community,
+    links: [
+      { label: t.github, href: REPO, external: true },
+      { label: t.issues, href: LINKS.issues, external: true },
+      { label: t.contributing, href: LINKS.contributing, external: true },
+      { label: t.security, href: LINKS.security, external: true },
+    ],
+  },
+  {
+    title: dict.footer.legal,
+    links: [
+      { label: t.license, href: LINKS.license, external: true },
+      { label: t.licensing, href: LINKS.licensing, external: true },
+      { label: t.trademarks, href: LINKS.trademarks, external: true },
+    ],
+  },
+];
+---
+
+<footer class="relative border-line border-t bg-bg-deep">
+  <div class="mx-auto max-w-6xl px-5 py-14">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_repeat(4,1fr)]">
+      <div>
+        <a href={withBase("/")} class="flex items-center gap-2.5" aria-label="Pier">
+          <img src={withBase("/logo.svg")} alt="" width="30" height="24" class="block" />
+          <span class="display-wide text-[15px] tracking-[0.16em]">PIER</span>
+        </a>
+        <p class="mt-3 text-[13px] text-muted">{dict.footer.tagline}</p>
+      </div>
+
+      {
+        columns.map((col) => (
+          <nav aria-label={col.title}>
+            <h3 class="font-mono text-[11px] text-faint uppercase tracking-[0.18em]">{col.title}</h3>
+            <ul class="mt-3.5 space-y-2.5">
+              {col.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noopener" : undefined}
+                    class="text-[13px] text-muted transition-colors hover:text-fg"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+
+    <div class="rule mt-12"></div>
+
+    <div class="mt-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <p class="font-mono text-[12px] text-faint">© 2026 runloom · AGPL-3.0-only</p>
+      <p class="max-w-xl text-[12px] text-faint">{dict.footer.note}</p>
+    </div>
+  </div>
+</footer>

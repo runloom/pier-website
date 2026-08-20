@@ -1,0 +1,75 @@
+---
+import { getDict, type Locale } from "../i18n";
+import SectionHead from "./SectionHead.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const dict = getDict(Astro.props.locale);
+const { cli } = dict;
+---
+
+<section id="cli" class="relative border-line border-t bg-bg-deep/50">
+  <div class="mx-auto max-w-6xl px-5 py-24 sm:py-28">
+    <SectionHead no={cli.no} label={cli.label} title={cli.title} />
+
+    <div class="mt-14 grid items-start gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-16">
+      <div data-reveal>
+        <h3 class="font-mono text-[15px] text-brand-ink">{cli.cliTitle}</h3>
+        <p class="prose-measure mt-3 text-[14.5px] text-muted leading-relaxed">{cli.cliBody}</p>
+
+        <div class="mt-8 rounded-xl border border-line bg-panel/55 p-5">
+          <div class="flex items-center gap-2.5">
+            <svg
+              viewBox="0 0 24 24"
+              class="size-4.5 text-brand-ink"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 2.5 4 6v6c0 5 3.4 8.2 8 9.5 4.6-1.3 8-4.5 8-9.5V6l-8-3.5Z"></path>
+              <path d="m8.8 12 2.2 2.2 4.2-4.4"></path>
+            </svg>
+            <h3 class="display text-[16px]">{cli.pluginTitle}</h3>
+          </div>
+          <p class="mt-2.5 text-[13.5px] text-muted leading-relaxed">{cli.pluginBody}</p>
+        </div>
+      </div>
+
+      <!-- 终端演示：固定深色形态 -->
+      <div class="dark" data-reveal style="--reveal-delay: 0.1s">
+        <div
+          class="overflow-hidden rounded-xl border border-line-strong bg-screen shadow-[0_1px_0_rgba(255,255,255,0.05)_inset,0_30px_70px_-28px_rgba(3,6,16,0.8)]"
+        >
+          <div class="flex h-8 items-center gap-1.5 border-line border-b bg-panel px-3.5">
+            <span class="size-2.5 rounded-full bg-[#ff5f57]/80"></span>
+            <span class="size-2.5 rounded-full bg-[#febc2e]/80"></span>
+            <span class="size-2.5 rounded-full bg-[#28c840]/80"></span>
+            <span class="ml-2 font-mono text-[10.5px] text-faint">zsh — pier</span>
+          </div>
+          <div class="space-y-3.5 px-5 py-5 font-mono text-[12.5px] leading-relaxed">
+            {
+              cli.termLines.map((line) => (
+                <div>
+                  <p class="text-faint">{line.note}</p>
+                  <p class="mt-0.5">
+                    <span class="text-term-green">❯</span>
+                    <span class="ml-2 text-fg">{line.cmd}</span>
+                  </p>
+                </div>
+              ))
+            }
+            <p>
+              <span class="text-term-green">❯</span>
+              <span class="caret ml-2"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
