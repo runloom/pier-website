@@ -9,7 +9,7 @@ export default defineConfig({
   base: "/pier-website",
   i18n: {
     defaultLocale: "zh",
-    locales: ["zh", "en"],
+    locales: ["zh", "en", "ja", "ko"],
     routing: {
       prefixDefaultLocale: false,
     },
@@ -21,6 +21,8 @@ export default defineConfig({
         locales: {
           zh: "zh-CN",
           en: "en",
+          ja: "ja",
+          ko: "ko",
         },
       },
     }),

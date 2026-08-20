@@ -11,9 +11,11 @@ import { localeHome } from "../i18n";
       <p class="section-label"><em>404</em>OFF THE CHART</p>
       <h1 class="display mt-5 text-[40px] sm:text-[52px]">这片水域没有泊位</h1>
       <p class="mt-3 text-[15px] text-muted">页面不存在或已被移动 · Page not found</p>
-      <div class="mt-8 flex gap-3.5">
-        <a href={localeHome("zh")} class="btn btn-primary">返回首页</a>
-        <a href={localeHome("en")} class="btn btn-ghost">English home</a>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href={localeHome("zh")} class="btn btn-primary">中文</a>
+        <a href={localeHome("en")} class="btn btn-ghost">English</a>
+        <a href={localeHome("ja")} class="btn btn-ghost">日本語</a>
+        <a href={localeHome("ko")} class="btn btn-ghost">한국어</a>
       </div>
     </div>
   </section>

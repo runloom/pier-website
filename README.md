@@ -29,10 +29,10 @@ scripts/generate-og.mjs    # 生成 public/og.png（改文案后重跑并提交�
 
 ## 国际化
 
-- URL：`/` 为中文（默认），`/en/` 为英文；两者互为 hreflang alternate。
-- 跟随系统：首次访问中文首页且无显式偏好时，按浏览器语言客户端跳转到 `/en/`；
+- URL：`/` 为中文（默认），`/en/` 为英文，`/ja/` 为日语，`/ko/` 为韩语；四者互为 hreflang alternate。
+- 跟随系统：首次访问中文首页且无显式偏好时，按浏览器语言客户端跳转（`zh` 留在 `/`，`ja` → `/ja/`，`ko` → `/ko/`，其余 → `/en/`）。
   语言切换器的显式选择写入 `localStorage`（`pier-lang`）并优先于系统语言。
-- 文案单一来源在 `src/i18n/zh.ts`（结构）与 `src/i18n/en.ts`（同构约束）。
+- 文案单一来源在 `src/i18n/zh.ts`（结构）与 `src/i18n/{en,ja,ko}.ts`（同构约束）。
 
 ## 主题
 

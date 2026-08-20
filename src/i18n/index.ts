@@ -1,12 +1,33 @@
 import { en } from "./en";
+import { ja } from "./ja";
+import { ko } from "./ko";
 import { zh } from "./zh";
 import type { Dict } from "./zh";
 
-export const LOCALES = ["zh", "en"] as const;
+export const LOCALES = ["zh", "en", "ja", "ko"] as const;
 export type Locale = (typeof LOCALES)[number];
 
+export const LOCALE_META: Record<
+  Locale,
+  { html: string; og: string; hreflang: string; short: string }
+> = {
+  zh: { html: "zh-CN", og: "zh_CN", hreflang: "zh-CN", short: "中" },
+  en: { html: "en", og: "en_US", hreflang: "en", short: "EN" },
+  ja: { html: "ja", og: "ja_JP", hreflang: "ja", short: "日本語" },
+  ko: { html: "ko", og: "ko_KR", hreflang: "ko", short: "한국어" },
+};
+
 export function getDict(locale: Locale): Dict {
-  return locale === "en" ? en : zh;
+  switch (locale) {
+    case "en":
+      return en;
+    case "ja":
+      return ja;
+    case "ko":
+      return ko;
+    default:
+      return zh;
+  }
 }
 
 /** 站点 base（GitHub Pages project path），保证不带尾斜杠。 */
@@ -19,15 +40,15 @@ export function withBase(path: string): string {
 
 /** 某 locale 的首页路径（zh 为默认语言，不带前缀）。 */
 export function localeHome(locale: Locale): string {
-  return locale === "zh" ? withBase("/") : withBase("/en/");
+  return locale === "zh" ? withBase("/") : withBase(`/${locale}/`);
 }
 
 export function htmlLang(locale: Locale): string {
-  return locale === "zh" ? "zh-CN" : "en";
+  return LOCALE_META[locale].html;
 }
 
 export function ogLocale(locale: Locale): string {
-  return locale === "zh" ? "zh_CN" : "en_US";
+  return LOCALE_META[locale].og;
 }
 
 /** 仓库与外链常量（单一来源）。 */

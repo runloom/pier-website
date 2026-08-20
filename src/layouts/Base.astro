@@ -8,6 +8,8 @@ import {
   htmlLang,
   LINKS,
   localeHome,
+  LOCALES,
+  LOCALE_META,
   ogLocale,
   withBase,
   type Locale,
@@ -15,7 +17,6 @@ import {
 
 interface Props {
   locale: Locale;
-  /** 覆盖默认 title/description（404 等页面用）。 */
   title?: string;
   description?: string;
 }
@@ -27,9 +28,11 @@ const pageDescription = description ?? dict.meta.description;
 
 const site = Astro.site!;
 const canonical = new URL(Astro.url.pathname, site);
-const zhUrl = new URL(localeHome("zh"), site);
-const enUrl = new URL(localeHome("en"), site);
+const localeUrls = Object.fromEntries(
+  LOCALES.map((item) => [item, new URL(localeHome(item), site).href])
+) as Record<Locale, string>;
 const ogImage = new URL(withBase("/og.png"), site);
+const otherLocales = LOCALES.filter((item) => item !== locale);
 
 const jsonLd = JSON.stringify({
   "@context": "https://schema.org",
@@ -43,6 +46,7 @@ const jsonLd = JSON.stringify({
   license: "https://www.gnu.org/licenses/agpl-3.0.html",
   downloadUrl: LINKS.releases,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  inLanguage: LOCALES.map((item) => LOCALE_META[item].html),
 });
 ---
 
@@ -51,7 +55,6 @@ const jsonLd = JSON.stringify({
   <head>
     <meta charset="utf-8" />
 
-    <!-- 主题防闪烁：首帧前根据偏好挂 .dark -->
     <script is:inline>
       (() => {
         try {
@@ -64,7 +67,7 @@ const jsonLd = JSON.stringify({
       })();
     </script>
 
-    <!-- 语言跟随系统：仅在中文首页、无显式偏好时跳转到 /en/；显式 URL 永远优先 -->
+    <!-- 仅中文首页、无显式偏好时按系统语言跳转 -->
     <script is:inline define:vars={{ base: BASE }}>
       (() => {
         try {
@@ -73,9 +76,22 @@ const jsonLd = JSON.stringify({
           if (path !== zhRoot && path !== base) return;
           const stored = localStorage.getItem("pier-lang");
           if (stored === "zh") return;
+          const target = (code) => {
+            if (code === "en") return `${base}/en/`;
+            if (code === "ja") return `${base}/ja/`;
+            if (code === "ko") return `${base}/ko/`;
+            return null;
+          };
+          if (stored) {
+            const href = target(stored);
+            if (href) window.location.replace(href);
+            return;
+          }
           const sys = (navigator.languages?.[0] || navigator.language || "zh").toLowerCase();
-          const wantEn = stored === "en" || (!stored && !sys.startsWith("zh"));
-          if (wantEn) window.location.replace(`${base}/en/`);
+          if (sys.startsWith("zh")) return;
+          if (sys.startsWith("ja")) window.location.replace(`${base}/ja/`);
+          else if (sys.startsWith("ko")) window.location.replace(`${base}/ko/`);
+          else window.location.replace(`${base}/en/`);
         } catch {}
       })();
     </script>
@@ -88,9 +104,10 @@ const jsonLd = JSON.stringify({
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7fb" />
 
     <link rel="canonical" href={canonical.href} />
-    <link rel="alternate" hreflang="zh-CN" href={zhUrl.href} />
-    <link rel="alternate" hreflang="en" href={enUrl.href} />
-    <link rel="alternate" hreflang="x-default" href={zhUrl.href} />
+    {LOCALES.map((item) => (
+      <link rel="alternate" hreflang={LOCALE_META[item].hreflang} href={localeUrls[item]} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={localeUrls.zh} />
     <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
 
     <link rel="icon" type="image/svg+xml" href={withBase("/logo.svg")} />
@@ -106,7 +123,9 @@ const jsonLd = JSON.stringify({
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={dict.meta.ogAlt} />
     <meta property="og:locale" content={ogLocale(locale)} />
-    <meta property="og:locale:alternate" content={ogLocale(locale === "zh" ? "en" : "zh")} />
+    {otherLocales.map((item) => (
+      <meta property="og:locale:alternate" content={ogLocale(item)} />
+    ))}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
@@ -117,7 +136,7 @@ const jsonLd = JSON.stringify({
   <body class="min-h-dvh bg-bg font-body text-fg antialiased">
     <a
       href="#main"
-      class="sr-only z-50 rounded-md bg-panel px-4 py-2 text-sm focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+      class="sr-only z-50 rounded-full bg-panel px-4 py-2 text-sm focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
     >
       {dict.a11y.skip}
     </a>
@@ -131,7 +150,6 @@ const jsonLd = JSON.stringify({
     <Footer locale={locale} />
 
     <script>
-      // 滚动显现
       const els = document.querySelectorAll("[data-reveal]");
       const io = new IntersectionObserver(
         (entries) => {
@@ -146,7 +164,6 @@ const jsonLd = JSON.stringify({
       );
       for (const el of els) io.observe(el);
 
-      // 语言切换：记住显式选择，再随链接跳转
       document.addEventListener("click", (e) => {
         const el = (e.target as HTMLElement).closest<HTMLElement>("[data-lang-switch]");
         if (el?.dataset.langSwitch) {

@@ -1,5 +1,5 @@
 ---
-import { getDict, type Locale } from "../i18n";
+import { getDict, LINKS, type Locale } from "../i18n";
 import SectionHead from "./SectionHead.astro";
 
 interface Props {
@@ -18,6 +18,10 @@ const { cli } = dict;
       <div data-reveal>
         <h3 class="font-mono text-[15px] text-brand-ink">{cli.cliTitle}</h3>
         <p class="prose-measure mt-3 text-[14.5px] text-muted leading-relaxed">{cli.cliBody}</p>
+        <a href={LINKS.cliManual} target="_blank" rel="noopener" class="btn btn-ghost mt-5 !px-4 !py-2 text-[13px]">
+          {cli.readCli}
+          <span aria-hidden="true">↗</span>
+        </a>
 
         <div class="mt-8 rounded-xl border border-line bg-panel/55 p-5">
           <div class="flex items-center gap-2.5">
@@ -37,10 +41,13 @@ const { cli } = dict;
             <h3 class="display text-[16px]">{cli.pluginTitle}</h3>
           </div>
           <p class="mt-2.5 text-[13.5px] text-muted leading-relaxed">{cli.pluginBody}</p>
+          <a href={LINKS.plugins} target="_blank" rel="noopener" class="btn btn-ghost mt-4 !px-4 !py-2 text-[13px]">
+            {cli.readPlugins}
+            <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
 
-      <!-- 终端演示：固定深色形态 -->
       <div class="dark" data-reveal style="--reveal-delay: 0.1s">
         <div
           class="overflow-hidden rounded-xl border border-line-strong bg-screen shadow-[0_1px_0_rgba(255,255,255,0.05)_inset,0_30px_70px_-28px_rgba(3,6,16,0.8)]"

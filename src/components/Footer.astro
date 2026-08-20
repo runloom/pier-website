@@ -1,5 +1,5 @@
 ---
-import { getDict, LINKS, REPO, withBase, type Locale } from "../i18n";
+import { getDict, LINKS, REPO, localeHome, withBase, type Locale } from "../i18n";
 
 interface Props {
   locale: Locale;
@@ -51,7 +51,7 @@ const columns = [
   <div class="mx-auto max-w-6xl px-5 py-14">
     <div class="grid gap-10 md:grid-cols-[1.4fr_repeat(4,1fr)]">
       <div>
-        <a href={withBase("/")} class="flex items-center gap-2.5" aria-label="Pier">
+        <a href={localeHome(locale)} class="flex items-center gap-2.5" aria-label="Pier">
           <img src={withBase("/logo.svg")} alt="" width="30" height="24" class="block" />
           <span class="display-wide text-[15px] tracking-[0.16em]">PIER</span>
         </a>

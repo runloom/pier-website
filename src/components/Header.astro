@@ -1,5 +1,6 @@
 ---
 import { getDict, localeHome, REPO, withBase, type Locale } from "../i18n";
+import LangSwitcher from "./LangSwitcher.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
 interface Props {
@@ -8,7 +9,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const dict = getDict(locale);
-const other: Locale = locale === "zh" ? "en" : "zh";
 
 const nav = [
   { href: "#why", label: dict.nav.why },
@@ -37,16 +37,7 @@ const nav = [
     </nav>
 
     <div class="ml-auto flex items-center gap-1.5">
-      <a
-        href={localeHome(other)}
-        data-lang-switch={other}
-        aria-label={dict.a11y.langSwitch}
-        title={dict.a11y.langSwitch}
-        class="inline-flex h-8 items-center rounded-lg border border-transparent px-2 font-mono text-[12px] text-muted transition-colors hover:border-line-strong hover:text-fg"
-      >
-        {dict.a11y.langSwitchShort}
-      </a>
-
+      <LangSwitcher locale={locale} />
       <ThemeToggle locale={locale} />
 
       <a
@@ -54,7 +45,7 @@ const nav = [
         target="_blank"
         rel="noopener"
         aria-label="GitHub"
-        class="inline-flex size-8 items-center justify-center rounded-lg border border-transparent text-muted transition-colors hover:border-line-strong hover:text-fg"
+        class="inline-flex size-8 items-center justify-center rounded-full border border-transparent text-muted transition-colors hover:border-line-strong hover:text-fg"
       >
         <svg viewBox="0 0 16 16" class="size-[17px]" fill="currentColor" aria-hidden="true">
           <path
