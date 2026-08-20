@@ -30,7 +30,7 @@ export function getDict(locale: Locale): Dict {
   }
 }
 
-/** 站点 base（GitHub Pages project path），保证不带尾斜杠。 */
+/** 站点 base（无自定义路径时为空字符串），保证不带尾斜杠。 */
 export const BASE = import.meta.env.BASE_URL.replace(/\/+$/, "");
 
 /** base 感知的站内路径。 */

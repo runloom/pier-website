@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://runloom.github.io/pier-website/sitemap-index.xml
+Sitemap: https://pier.runloom.ai/sitemap-index.xml
