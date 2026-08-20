@@ -6,6 +6,32 @@ interface Props {
 }
 
 const mock = getDict(Astro.props.locale).mock;
+const activeChange = mock.files.find((file) => file.active) ?? mock.files[0];
+const activePath = `${activeChange.path}/${activeChange.name}`;
+
+type GitRow =
+  | { kind: "dir"; name: string; indent: number }
+  | { kind: "file"; name: string; indent: number; letter: string; active: boolean };
+
+const gitRows: GitRow[] = [];
+const seenDirs = new Set<string>();
+for (const file of mock.files) {
+  const parts = file.path.split("/");
+  parts.forEach((part, index) => {
+    const key = parts.slice(0, index + 1).join("/");
+    if (!seenDirs.has(key)) {
+      seenDirs.add(key);
+      gitRows.push({ kind: "dir", name: part, indent: index });
+    }
+  });
+  gitRows.push({
+    kind: "file",
+    name: file.name,
+    indent: parts.length,
+    letter: file.letter,
+    active: file.active,
+  });
+}
 
 const statusDot: Record<string, string> = {
   run: "text-run",
@@ -14,12 +40,11 @@ const statusDot: Record<string, string> = {
 };
 ---
 
-<!-- 对齐真实 Pier：自定义标题栏 + 文件树 | 原生终端 Tab | Git 变更审查 -->
+<!-- 对齐真实 Pier：标题栏 + 文件树 | Ghostty 原生终端 | Git 树侧栏 + diff 正文 -->
 <div class="dark relative" aria-hidden="true">
   <div
     class="relative overflow-hidden rounded-xl border border-line-strong bg-panel-2 shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_40px_90px_-30px_rgba(3,6,16,0.85)]"
   >
-    <!-- 标题栏：居中路径 + 右侧智能体计数 -->
     <div class="relative flex h-[38px] items-center border-line border-b bg-panel px-3">
       <div class="flex items-center gap-1.5">
         <span class="size-2.5 rounded-full bg-[#ff5f57]/80"></span>
@@ -45,29 +70,38 @@ const statusDot: Record<string, string> = {
       </div>
     </div>
 
-    <div class="grid grid-cols-[minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)] lg:grid-cols-[168px_minmax(0,1fr)_272px]">
-      <!-- 文件面板 -->
+    <div class="grid min-h-[248px] grid-cols-[minmax(0,1fr)] sm:grid-cols-[156px_minmax(0,1fr)] lg:grid-cols-[156px_minmax(0,1fr)_minmax(320px,380px)]">
       <aside class="hidden min-w-0 border-line border-r bg-panel/70 sm:block">
-        <div class="flex h-7 items-center border-line border-b px-2">
-          <span class="rounded-sm bg-screen px-2 py-0.5 font-medium text-[11px] text-fg">{mock.filesTab}</span>
+        <div class="flex h-7 items-center gap-1.5 border-line border-b px-2">
+          <svg viewBox="0 0 16 16" class="size-3.5 text-faint" fill="currentColor">
+            <path d="M1.75 2.5A.75.75 0 0 0 1 3.25v9.5c0 .41.34.75.75.75h12.5a.75.75 0 0 0 .75-.75v-7.5a.75.75 0 0 0-.75-.75H8.06l-.72-1.06A.75.75 0 0 0 6.72 2.5H1.75Z"></path>
+          </svg>
+          <span class="truncate font-medium text-[11px] text-fg">{mock.filesTab}</span>
         </div>
-        <ul class="px-1.5 py-2 font-mono text-[11px]">
+        <ul class="px-1 py-1.5 font-mono text-[11px]">
           {
             mock.tree.map((node) => (
               <li
                 class:list={[
-                  "flex items-center gap-1 rounded-sm py-0.5 pr-1.5",
+                  "flex items-center gap-1 rounded-sm py-[3px] pr-1.5",
                   node.active && "bg-[rgba(133,73,255,0.16)] text-fg",
                   !node.active && "text-muted",
                 ]}
-                style={`padding-left: ${8 + node.indent * 12}px`}
+                style={`padding-left: ${6 + node.indent * 10}px`}
               >
                 {node.kind === "dir" ? (
-                  <svg viewBox="0 0 16 16" class="size-3 text-faint" fill="currentColor">
+                  <svg viewBox="0 0 12 12" class="size-2.5 shrink-0 text-faint" fill="currentColor">
+                    <path d="M2.4 4.2 6 7.8l3.6-3.6H2.4Z"></path>
+                  </svg>
+                ) : (
+                  <span class="inline-block size-2.5 shrink-0"></span>
+                )}
+                {node.kind === "dir" ? (
+                  <svg viewBox="0 0 16 16" class="size-3 shrink-0 text-faint" fill="currentColor">
                     <path d="M1.75 2.5A.75.75 0 0 0 1 3.25v9.5c0 .41.34.75.75.75h12.5a.75.75 0 0 0 .75-.75v-7.5a.75.75 0 0 0-.75-.75H8.06l-.72-1.06A.75.75 0 0 0 6.72 2.5H1.75Z"></path>
                   </svg>
                 ) : (
-                  <svg viewBox="0 0 16 16" class="size-3 text-faint" fill="currentColor">
+                  <svg viewBox="0 0 16 16" class="size-3 shrink-0 text-faint" fill="currentColor">
                     <path d="M3 2.75A.75.75 0 0 1 3.75 2h5.69L13 5.56v7.69a.75.75 0 0 1-.75.75h-8.5A.75.75 0 0 1 3 13.25V2.75Z"></path>
                   </svg>
                 )}
@@ -78,47 +112,88 @@ const statusDot: Record<string, string> = {
         </ul>
       </aside>
 
-      <!-- 终端面板：Tab 状态点 + 原生 CLI 输出 + 增强输入 -->
       <section class="flex min-w-0 flex-col bg-screen">
         <div class="flex h-7 items-center gap-0.5 border-line border-b bg-panel/90 px-1.5">
           {
             mock.terminalTabs.map((tab, i) => (
               <span
                 class:list={[
-                  "relative flex h-6 items-center gap-1.5 rounded-sm px-2 font-mono text-[11px]",
+                  "relative flex h-6 items-center gap-1.5 rounded-sm px-1.5 font-mono text-[11px]",
                   i === 0 ? "bg-screen text-fg" : "text-faint",
                 ]}
               >
-                {tab.status !== "idle" && (
-                  <span class:list={["dot", statusDot[tab.status], tab.status === "run" && "dot-pulse"]} />
-                )}
+                <span class="relative flex size-3.5 items-center justify-center">
+                  {tab.kind === "claude" && (
+                    <svg viewBox="0 0 16 16" class="size-3.5 text-[#d4a27f]" fill="currentColor">
+                      <path d="M8 1.2 9.7 6.3 15 8 9.7 9.7 8 14.8 6.3 9.7 1 8l5.3-1.7L8 1.2Z"></path>
+                    </svg>
+                  )}
+                  {tab.kind === "codex" && (
+                    <svg viewBox="0 0 16 16" class="size-3.5 text-[#7d8cff]" fill="none" stroke="currentColor" stroke-width="1.6">
+                      <circle cx="8" cy="8" r="5.2"></circle>
+                    </svg>
+                  )}
+                  {tab.kind === "shell" && (
+                    <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.6">
+                      <path d="M4 5.5 7 8l-3 2.5M8.5 11.5h3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  )}
+                  {tab.status !== "idle" && (
+                    <span
+                      class:list={[
+                        "absolute -right-0.5 -bottom-0.5 size-1.5 rounded-full ring-2 ring-panel",
+                        statusDot[tab.status],
+                        "bg-current",
+                        tab.status === "run" && "dot-pulse",
+                      ]}
+                    />
+                  )}
+                </span>
                 {tab.title}
               </span>
             ))
           }
         </div>
-        <div class="min-h-[168px] flex-1 space-y-1 px-4 py-3 font-mono text-[11.5px] leading-relaxed">
+        <div class="min-h-[168px] flex-1 px-3 py-2.5 font-mono text-[11.5px] leading-[1.55]">
           {
             mock.termLines.map((line) => {
-              if (line.kind === "brand") {
-                return <p class="text-brand-ink">{line.text}</p>;
+              if (line.kind === "dim") {
+                return <p class="text-faint">{line.text}</p>;
               }
               if (line.kind === "tool") {
-                return <p class="text-faint">{line.text}</p>;
+                return <p class="text-[#7aa2f7]">{line.text}</p>;
               }
               if (line.kind === "ok") {
                 return <p class="text-term-green">{line.text}</p>;
               }
-              return <p class="text-muted">{line.text}</p>;
+              if (line.kind === "prompt") {
+                return (
+                  <p class="mt-2 flex items-center gap-1 text-muted">
+                    <span>{line.text}</span>
+                    <span class="caret"></span>
+                  </p>
+                );
+              }
+              return <p class="mt-1.5 text-[#c8d0e0]">{line.text}</p>;
             })
           }
         </div>
-        <div class="border-line border-t px-2 py-1.5">
-          <div class="flex h-7 items-center rounded-full border border-line-strong bg-panel px-3 font-mono text-[11px] text-faint">
-            {mock.composer}
+        <div class="px-2 pb-1.5">
+          <div class="flex h-8 items-center gap-1 rounded-full border border-line-strong bg-panel px-1">
+            <span class="flex size-6 shrink-0 items-center justify-center rounded-full text-faint">
+              <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path d="M8 3.5v9M3.5 8h9" stroke-linecap="round"></path>
+              </svg>
+            </span>
+            <span class="min-w-0 flex-1 truncate font-mono text-[11px] text-faint">{mock.composer}</span>
+            <span class="flex size-6 shrink-0 items-center justify-center rounded-full text-faint">
+              <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path d="M3 8h9M8.5 4.5 12.5 8 8.5 11.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
           </div>
         </div>
-        <div class="flex h-6 items-center justify-between border-line border-t bg-panel px-3 font-mono text-[10px] text-faint">
+        <div class="flex h-7 items-center justify-between border-line border-t bg-panel px-3 font-mono text-[10px] text-faint">
           <span class="flex items-center gap-1.5 text-run">
             <span class="dot dot-pulse"></span>
             {mock.agentRunning}
@@ -132,41 +207,81 @@ const statusDot: Record<string, string> = {
         </div>
       </section>
 
-      <!-- Git 变更审查：分组树 + 统一 diff + 暂存/还原 -->
-      <aside class="hidden min-w-0 border-line border-l bg-panel/70 lg:block">
-        <div class="flex h-7 items-center justify-between border-line border-b px-2">
-          <span class="rounded-sm bg-screen px-2 py-0.5 font-medium text-[11px] text-fg">{mock.changesTab}</span>
-          <span class="font-mono text-[10px] text-faint">{mock.branch}</span>
+      <aside class="hidden min-w-0 border-line border-l bg-panel/70 lg:flex lg:flex-col">
+        <div class="flex h-7 items-center gap-1.5 border-line border-b px-2">
+          <svg viewBox="0 0 16 16" class="size-3.5 text-faint" fill="currentColor">
+            <path d="M11.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm-2.25.75a2.25 2.25 0 1 1 3 2.122V6.5A2.5 2.5 0 0 1 10 9H6a1 1 0 0 0-1 1v.628a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.492 2.492 0 0 1 6 7.5h4a1 1 0 0 0 1-1v-1.128A2.25 2.25 0 0 1 9.5 3.25ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM3.5 3.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Z"></path>
+          </svg>
+          <span class="truncate font-medium text-[11px] text-fg">{mock.changesTab}</span>
         </div>
-        <p class="px-3 pt-2 font-mono text-[10px] text-faint uppercase tracking-[0.16em]">{mock.unstaged}</p>
-        <ul class="px-1.5 pb-1">
-          {
-            mock.files.map((f) => (
-              <li class:list={["rounded-sm px-2 py-1", f.active && "bg-[rgba(210,222,255,0.06)]"]}>
-                <div class="flex items-center gap-2">
-                  <span class="min-w-0 truncate font-mono text-[11px] text-fg">{f.name}</span>
-                  <span class="ml-auto font-mono text-[10px] text-done">+{f.add}</span>
-                  <span class="font-mono text-[10px] text-error">−{f.del}</span>
-                </div>
-                <p class="font-mono text-[10px] text-faint">{f.path}</p>
-              </li>
-            ))
-          }
-        </ul>
-        <div class="border-line border-t px-2 py-2">
-          <div class="mb-1.5 flex items-center justify-between">
-            <p class="truncate font-mono text-[10px] text-faint">{mock.hunkHeader}</p>
-            <div class="flex gap-1">
-              <span class="rounded-full border border-line-strong px-2 py-0.5 font-mono text-[10px] text-muted">
-                {mock.stage}
-              </span>
-              <span class="rounded-full border border-line-strong px-2 py-0.5 font-mono text-[10px] text-muted">
-                {mock.restore}
+        <div class="grid min-h-0 flex-1 grid-cols-[118px_minmax(0,1fr)]">
+          <div class="min-w-0 border-line border-r py-1.5">
+            <p class="flex items-center gap-1 px-1.5 pb-1 font-mono text-[10px] text-faint">
+              <svg viewBox="0 0 12 12" class="size-2.5" fill="currentColor">
+                <path d="M2.4 4.2 6 7.8l3.6-3.6H2.4Z"></path>
+              </svg>
+              {mock.unstaged}
+            </p>
+            <ul>
+              {
+                gitRows.map((row) =>
+                  row.kind === "dir" ? (
+                    <li
+                      class="flex items-center gap-1 py-[2px] font-mono text-[10.5px] text-muted"
+                      style={`padding-left: ${10 + row.indent * 8}px`}
+                    >
+                      <svg viewBox="0 0 12 12" class="size-2.5 shrink-0 text-faint" fill="currentColor">
+                        <path d="M2.4 4.2 6 7.8l3.6-3.6H2.4Z"></path>
+                      </svg>
+                      <span class="truncate">{row.name}</span>
+                    </li>
+                  ) : (
+                    <li
+                      class:list={[
+                        "flex items-center gap-1 py-[2px] pr-1.5 font-mono text-[10.5px]",
+                        row.active ? "bg-[rgba(210,222,255,0.08)] text-fg" : "text-muted",
+                      ]}
+                      style={`padding-left: ${10 + row.indent * 8}px`}
+                    >
+                      <span class="min-w-0 truncate">{row.name}</span>
+                      <span
+                        class:list={[
+                          "ml-auto font-medium",
+                          row.letter === "A" ? "text-done" : "text-needs",
+                        ]}
+                      >
+                        {row.letter}
+                      </span>
+                    </li>
+                  )
+                )
+              }
+            </ul>
+          </div>
+          <div class="flex min-w-0 flex-col">
+            <div class="flex items-center gap-1.5 border-line border-b px-2 py-1">
+              <span class="min-w-0 truncate font-mono text-[10.5px] text-fg">{activePath}</span>
+              <span class="ml-auto flex shrink-0 items-center gap-1 font-mono text-[10px]">
+                <span class="text-done">+{activeChange.add}</span>
+                <span class="text-error">−{activeChange.del}</span>
               </span>
             </div>
+            <div class="relative px-2 pt-2 pb-1">
+              <div class="mb-1 flex items-center gap-1">
+                <p class="min-w-0 truncate font-mono text-[10px] text-faint">{mock.hunkHeader}</p>
+                <div class="ml-auto flex shrink-0 items-center gap-1">
+                  <span class="inline-flex h-[22px] min-w-[2.75rem] items-center justify-center rounded-full border border-line-strong px-2.5 font-mono text-[10px] leading-none text-muted">
+                    {mock.restore}
+                  </span>
+                  <span class="inline-flex h-[22px] min-w-[2.75rem] items-center justify-center rounded-full border border-line-strong px-2.5 font-mono text-[10px] leading-none text-muted">
+                    {mock.stage}
+                  </span>
+                </div>
+              </div>
+              <p class="bg-error/15 px-1.5 py-0.5 font-mono text-[10.5px] text-error">{mock.hunkDel}</p>
+              <p class="bg-done/15 px-1.5 py-0.5 font-mono text-[10.5px] text-done">{mock.hunkAdd}</p>
+            </div>
           </div>
-          <p class="rounded-sm bg-error/15 px-1.5 py-0.5 font-mono text-[10.5px] text-error">{mock.hunkDel}</p>
-          <p class="rounded-sm bg-done/15 px-1.5 py-0.5 font-mono text-[10.5px] text-done">{mock.hunkAdd}</p>
         </div>
       </aside>
     </div>
