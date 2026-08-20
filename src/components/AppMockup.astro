@@ -1,5 +1,6 @@
 ---
 import { getDict, type Locale } from "../i18n";
+import MockIcon from "./MockIcon.astro";
 
 interface Props {
   locale: Locale;
@@ -9,40 +10,43 @@ const mock = getDict(Astro.props.locale).mock;
 const activeChange = mock.files.find((file) => file.active) ?? mock.files[0];
 const insertions = mock.files.reduce((sum, file) => sum + file.add, 0);
 const deletions = mock.files.reduce((sum, file) => sum + file.del, 0);
-const gitLetterByName = Object.fromEntries(mock.files.map((file) => [file.name, file.letter]));
 
-type GitRow =
-  | { kind: "dir"; name: string; indent: number }
+type TreeRow =
+  | { kind: "group" | "dir" | "compact"; name: string; indent: number }
   | { kind: "file"; name: string; indent: number; letter: string; active: boolean };
 
-const gitRows: GitRow[] = [];
-const seenDirs = new Set<string>();
-for (const file of mock.files) {
-  const parts = file.path.split("/");
-  parts.forEach((part, index) => {
-    const key = parts.slice(0, index + 1).join("/");
-    if (!seenDirs.has(key)) {
-      seenDirs.add(key);
-      gitRows.push({ kind: "dir", name: part, indent: index });
-    }
-  });
-  gitRows.push({
-    kind: "file",
-    name: file.name,
-    indent: parts.length,
-    letter: file.letter,
-    active: file.active,
-  });
+/** Files tree: compact folders (default on) merge src/checkout. */
+const filesRows: TreeRow[] = [
+  { kind: "compact", name: "src / checkout", indent: 0 },
+  { kind: "file", name: "cart.ts", indent: 1, letter: "M", active: true },
+  { kind: "file", name: "price.ts", indent: 1, letter: "M", active: false },
+  { kind: "dir", name: "tests", indent: 0 },
+  { kind: "file", name: "cart.test.ts", indent: 1, letter: "A", active: false },
+  { kind: "file", name: "package.json", indent: 0, letter: "", active: false },
+];
+
+/**
+ * Git review tree: group root stays its own row (flattenMinDepth=2),
+ * then single-child path chains flatten to `src / checkout`.
+ */
+const gitRows: TreeRow[] = [
+  { kind: "group", name: mock.unstaged, indent: 0 },
+  { kind: "compact", name: "src / checkout", indent: 1 },
+  { kind: "file", name: "cart.ts", indent: 2, letter: "M", active: true },
+  { kind: "file", name: "price.ts", indent: 2, letter: "M", active: false },
+  { kind: "dir", name: "tests", indent: 1 },
+  { kind: "file", name: "cart.test.ts", indent: 2, letter: "A", active: false },
+];
+
+function fileKind(name: string): "ts" | "json" {
+  return name.endsWith(".json") ? "json" : "ts";
 }
 
-function fileKind(name: string): "ts" | "json" | "file" {
-  if (name.endsWith(".ts")) return "ts";
-  if (name.endsWith(".json")) return "json";
-  return "file";
+function letterClass(letter: string): string {
+  return letter === "A" ? "text-done" : "text-run";
 }
 ---
 
-<!-- 对齐真实 Pier chrome：dockview Tab（顶缘指示线 / 项目名 / Git +/-）+ FilePanelHeader + 原生终端 overlay composer -->
 <div class="dark relative" aria-hidden="true">
   <div
     class="relative overflow-hidden rounded-xl border border-line-strong bg-panel-2 shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_40px_90px_-30px_rgba(3,6,16,0.85)]"
@@ -67,78 +71,64 @@ function fileKind(name: string): "ts" | "json" | "file" {
             1
           </span>
         </span>
-        <svg viewBox="0 0 24 24" class="size-3.5 text-faint" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M6 9a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9" stroke-linecap="round"></path>
-          <path d="M10 21h4" stroke-linecap="round"></path>
-        </svg>
+        <MockIcon name="bell" class="size-3.5 text-faint" />
       </div>
     </div>
 
-    <div class="grid min-h-[268px] grid-cols-[minmax(0,1fr)] sm:grid-cols-[168px_minmax(0,1fr)] lg:grid-cols-[168px_minmax(0,1fr)_minmax(340px,400px)]">
+    <div class="grid min-h-[268px] grid-cols-[minmax(0,1fr)] sm:grid-cols-[176px_minmax(0,1fr)] lg:grid-cols-[176px_minmax(0,1fr)_minmax(340px,400px)]">
       <aside class="hidden min-w-0 border-line border-r bg-panel sm:flex sm:flex-col">
         <div class="pier-tabs">
           <span class="pier-tab" data-active>
-            <svg viewBox="0 0 24 24" class="size-3.5 text-faint" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h4.2l1.6 2H18.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9Z"></path>
-            </svg>
+            <MockIcon name="folder" class="size-3.5 text-faint" />
             <span class="font-mono font-medium">{mock.filesTab}</span>
-            <svg viewBox="0 0 12 12" class="ml-auto size-3 text-faint/80" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M3 3l6 6M9 3 3 9" stroke-linecap="round"></path>
-            </svg>
+            <MockIcon name="x" class="ml-auto size-3 text-faint/80" />
           </span>
         </div>
         <div class="flex h-10 shrink-0 items-center gap-0.5 border-line border-b px-1.5">
           <span class="flex size-6 items-center justify-center text-faint">
-            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M4 4h5l2 2h9v4H4V4Z" stroke-linejoin="round"></path>
-              <path d="M4 12v8h6M14 16v4h6" stroke-linecap="round"></path>
-            </svg>
+            <MockIcon name="folder-tree" />
           </span>
           <span class="flex size-6 items-center justify-center text-faint">
-            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8">
-              <circle cx="11" cy="11" r="6.5"></circle>
-              <path d="m16 16 4 4" stroke-linecap="round"></path>
-            </svg>
+            <MockIcon name="search" />
           </span>
           <span class="min-w-0 flex-1 truncate px-1 text-center font-mono text-[11px] text-faint">{mock.filesTab}</span>
         </div>
         <ul class="flex-1 px-1 py-1 font-mono text-[11px]">
           {
-            mock.tree.map((node) => (
+            filesRows.map((row) => (
               <li
                 class:list={[
                   "flex items-center gap-1 rounded-sm py-[3px] pr-1",
-                  node.active && "bg-[rgba(133,73,255,0.16)] text-fg",
-                  !node.active && "text-muted",
+                  row.kind === "file" && row.active && "bg-[rgba(133,73,255,0.16)] text-fg",
+                  !(row.kind === "file" && row.active) && "text-muted",
                 ]}
-                style={`padding-left: ${6 + node.indent * 10}px`}
+                style={`padding-left: ${6 + row.indent * 12}px`}
               >
-                {node.kind === "dir" ? (
-                  <svg viewBox="0 0 12 12" class="size-2.5 shrink-0 text-faint" fill="currentColor">
-                    <path d="M2.4 4.2 6 7.8l3.6-3.6H2.4Z"></path>
-                  </svg>
+                {row.kind !== "file" ? (
+                  <MockIcon name="chevron-down" class="size-3 shrink-0 text-faint" />
                 ) : (
-                  <span class="inline-block size-2.5 shrink-0"></span>
+                  <span class="inline-block size-3 shrink-0"></span>
                 )}
-                {node.kind === "dir" ? (
+                {row.kind === "file" ? (
+                  fileKind(row.name) === "ts" ? (
+                    <span class="inline-flex size-3.5 shrink-0 items-center justify-center rounded-[2px] bg-[#69b1ff] font-sans font-bold text-[7px] leading-none text-[#0b1220]">TS</span>
+                  ) : (
+                    <span class="inline-flex size-3.5 shrink-0 items-center justify-center rounded-[2px] bg-[#ffa359] font-sans font-bold text-[6px] leading-none text-[#0b1220]">{"{}"}</span>
+                  )
+                ) : (
                   <svg viewBox="0 0 16 16" class="size-3.5 shrink-0 text-[#ffd452]" fill="currentColor">
                     <path d="M1.75 3A.75.75 0 0 1 2.5 2.25h3.38c.2 0 .39.08.53.22l.9.9h6.44A.75.75 0 0 1 14.5 4.1v8.15a.75.75 0 0 1-.75.75H2.5A.75.75 0 0 1 1.75 12.25V3Z"></path>
                   </svg>
-                ) : fileKind(node.name) === "ts" ? (
-                  <span class="inline-flex size-3.5 shrink-0 items-center justify-center rounded-[2px] bg-[#69b1ff] font-sans font-bold text-[7px] leading-none text-[#0b1220]">TS</span>
-                ) : (
-                  <span class="inline-flex size-3.5 shrink-0 items-center justify-center rounded-[2px] bg-[#ffa359] font-sans font-bold text-[6px] leading-none text-[#0b1220]">{"{}"}</span>
                 )}
-                <span class="min-w-0 truncate">{node.name}</span>
-                {gitLetterByName[node.name] && (
-                  <span
-                    class:list={[
-                      "ml-auto font-medium text-[10px]",
-                      gitLetterByName[node.name] === "A" ? "text-done" : "text-needs",
-                    ]}
-                  >
-                    {gitLetterByName[node.name]}
+                {row.kind === "compact" ? (
+                  <span class="min-w-0 truncate">
+                    src<span class="text-faint"> / </span>checkout
                   </span>
+                ) : (
+                  <span class="min-w-0 truncate">{row.name}</span>
+                )}
+                {row.kind === "file" && row.letter && (
+                  <span class:list={["ml-auto font-medium text-[10px]", letterClass(row.letter)]}>{row.letter}</span>
                 )}
               </li>
             ))
@@ -153,29 +143,15 @@ function fileKind(name: string): "ts" | "json" | "file" {
               <span class:list={["pier-tab", i === 0 && "font-semibold"]} data-active={i === 0 || undefined} data-focus={i === 0 || undefined}>
                 {i === 0 && <span class="absolute top-1/2 left-1 size-1.5 -translate-y-1/2 rounded-full bg-run"></span>}
                 <span class:list={["relative flex size-3.5 items-center justify-center", i === 0 && "ml-2"]}>
-                  {tab.kind === "claude" && (
-                    <svg viewBox="0 0 24 24" class="size-3.5" fill="#D97757">
-                      <path d="M4.709 15.955l4.72-2.647.08-.23-.08-.128H9.2l-.79-.048-2.698-.073-2.339-.097-2.266-.122-.571-.121L0 11.784l.055-.352.48-.321.686.06 1.52.103 2.278.158 1.652.097 2.449.255h.389l.055-.157-.134-.098-.103-.097-2.358-1.596-2.552-1.688-1.336-.972-.724-.491-.364-.462-.158-1.008.656-.722.881.06.225.061.893.686 1.908 1.476 2.491 1.833.365.304.145-.103.019-.073-.164-.274-1.355-2.446-1.446-2.49-.644-1.032-.17-.619a2.97 2.97 0 01-.104-.729L6.283.134 6.696 0l.996.134.42.364.62 1.414 1.002 2.229 1.555 3.03.456.898.243.832.091.255h.158V9.01l.128-1.706.237-2.095.23-2.695.08-.76.376-.91.747-.492.584.28.48.685-.067.444-.286 1.851-.559 2.903-.364 1.942h.212l.243-.242.985-1.306 1.652-2.064.73-.82.85-.904.547-.431h1.033l.76 1.129-.34 1.166-1.064 1.347-.881 1.142-1.264 1.7-.79 1.36.073.11.188-.02 2.856-.606 1.543-.28 1.841-.315.833.388.091.395-.328.807-1.969.486-2.309.462-3.439.813-.042.03.049.061 1.549.146.662.036h1.622l3.02.225.79.522.474.638-.079.485-1.215.62-1.64-.389-3.829-.91-1.312-.329h-.182v.11l1.093 1.068 2.006 1.81 2.509 2.33.127.578-.322.455-.34-.049-2.205-1.657-.851-.747-1.926-1.62h-.128v.17l.444.649 2.345 3.521.122 1.08-.17.353-.608.213-.668-.122-1.374-1.925-1.415-2.167-1.143-1.943-.14.08-.674 7.254-.316.37-.729.28-.607-.461-.322-.747.322-1.476.389-1.924.315-1.53.286-1.9.17-.632-.012-.042-.14.018-1.434 1.967-2.18 2.945-1.726 1.845-.414.164-.717-.37.067-.662.401-.589 2.388-3.036 1.44-1.882.93-1.086-.006-.158h-.055L4.132 18.56l-1.13.146-.487-.456.061-.746.231-.243 1.908-1.312-.006.006z"></path>
-                    </svg>
-                  )}
-                  {tab.kind === "codex" && (
-                    <svg viewBox="0 0 24 24" class="size-3.5" fill="currentColor">
-                      <path fill-rule="evenodd" d="M12 3.2a8.8 8.8 0 1 0 0 17.6 8.8 8.8 0 0 0 0-17.6ZM8.2 12a3.8 3.8 0 1 1 7.6 0 3.8 3.8 0 0 1-7.6 0Z" clip-rule="evenodd"></path>
-                    </svg>
-                  )}
-                  {tab.kind === "shell" && (
-                    <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.6">
-                      <path d="M4 5.5 7 8l-3 2.5M8.5 11.5h3.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                  )}
+                  {tab.kind === "claude" && <MockIcon name="claude" />}
+                  {tab.kind === "codex" && <MockIcon name="openai" />}
+                  {tab.kind === "shell" && <MockIcon name="square-terminal" />}
                   {tab.status === "needs" && (
                     <span class="absolute -right-0.5 -bottom-0.5 size-1.5 rounded-full bg-needs ring-2 ring-panel"></span>
                   )}
                 </span>
                 <span class="max-w-[7.5rem] truncate">{tab.title}</span>
-                <svg viewBox="0 0 12 12" class="size-3 text-faint/70" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M3 3l6 6M9 3 3 9" stroke-linecap="round"></path>
-                </svg>
+                <MockIcon name="x" class="size-3 text-faint/70" />
               </span>
             ))
           }
@@ -183,15 +159,9 @@ function fileKind(name: string): "ts" | "json" | "file" {
         <div class="min-h-[148px] flex-1 px-3 pt-2.5 pb-14 font-mono text-[11.5px] leading-[1.55]">
           {
             mock.termLines.map((line) => {
-              if (line.kind === "dim") {
-                return <p class="text-faint">{line.text}</p>;
-              }
-              if (line.kind === "tool") {
-                return <p class="text-[#7aa2f7]">{line.text}</p>;
-              }
-              if (line.kind === "ok") {
-                return <p class="text-term-green">{line.text}</p>;
-              }
+              if (line.kind === "dim") return <p class="text-faint">{line.text}</p>;
+              if (line.kind === "tool") return <p class="text-[#7aa2f7]">{line.text}</p>;
+              if (line.kind === "ok") return <p class="text-term-green">{line.text}</p>;
               if (line.kind === "prompt") {
                 return (
                   <p class="mt-2 flex items-center gap-1 text-muted">
@@ -207,15 +177,11 @@ function fileKind(name: string): "ts" | "json" | "file" {
         <div class="absolute inset-x-2 bottom-[30px] z-10">
           <div class="flex h-9 items-center gap-1 rounded-full border border-line-strong bg-panel px-1 shadow-lg">
             <span class="flex size-7 shrink-0 items-center justify-center rounded-full text-faint">
-              <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.7">
-                <path d="M8 3.5v9M3.5 8h9" stroke-linecap="round"></path>
-              </svg>
+              <MockIcon name="plus" />
             </span>
             <span class="min-w-0 flex-1 truncate font-mono text-[11px] text-faint">{mock.composer}</span>
-            <span class="flex size-7 shrink-0 items-center justify-center rounded-full text-faint">
-              <svg viewBox="0 0 16 16" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.7">
-                <path d="M3 8h9M8.5 4.5 12.5 8 8.5 11.5" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
+            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand text-white">
+              <MockIcon name="arrow-up" class="size-3.5" />
             </span>
           </div>
         </div>
@@ -225,9 +191,7 @@ function fileKind(name: string): "ts" | "json" | "file" {
             {mock.agentRunning}
           </span>
           <span class="flex items-center gap-1">
-            <svg viewBox="0 0 16 16" class="size-3" fill="currentColor">
-              <path d="M11.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm-2.25.75a2.25 2.25 0 1 1 3 2.122V6.5A2.5 2.5 0 0 1 10 9H6a1 1 0 0 0-1 1v.628a2.251 2.251 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.5 0v1.836A2.492 2.492 0 0 1 6 7.5h4a1 1 0 0 0 1-1v-1.128A2.25 2.25 0 0 1 9.5 3.25ZM4.25 12a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM3.5 3.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Z"></path>
-            </svg>
+            <MockIcon name="git-branch" class="size-3" />
             {mock.branch}
           </span>
         </div>
@@ -236,32 +200,21 @@ function fileKind(name: string): "ts" | "json" | "file" {
       <aside class="hidden min-w-0 border-line border-l bg-panel lg:flex lg:flex-col">
         <div class="pier-tabs">
           <span class="pier-tab" data-active>
-            <svg viewBox="0 0 24 24" class="size-3.5 text-faint" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M12 3v12M8 11l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M8 5H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3" stroke-linecap="round"></path>
-            </svg>
+            <MockIcon name="diff" class="size-3.5 text-faint" />
             <span class="font-mono font-medium">{mock.filesTab}</span>
             <span class="ml-0.5 inline-flex items-center gap-1 font-mono font-normal text-[11px] tabular-nums">
               <span class="text-done">+{insertions}</span>
               <span class="text-error">−{deletions}</span>
             </span>
-            <svg viewBox="0 0 12 12" class="ml-auto size-3 text-faint/80" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M3 3l6 6M9 3 3 9" stroke-linecap="round"></path>
-            </svg>
+            <MockIcon name="x" class="ml-auto size-3 text-faint/80" />
           </span>
         </div>
         <div class="flex h-10 shrink-0 items-center gap-0.5 border-line border-b px-1.5">
           <span class="flex size-6 items-center justify-center text-faint">
-            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M4 4h5l2 2h9v4H4V4Z" stroke-linejoin="round"></path>
-              <path d="M4 12v8h6M14 16v4h6" stroke-linecap="round"></path>
-            </svg>
+            <MockIcon name="folder-tree" />
           </span>
           <span class="flex size-6 items-center justify-center text-faint">
-            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8">
-              <circle cx="11" cy="11" r="6.5"></circle>
-              <path d="m16 16 4 4" stroke-linecap="round"></path>
-            </svg>
+            <MockIcon name="search" />
           </span>
           <span class="relative ml-1 px-1 pb-1.5 font-medium text-[12px] text-fg">
             {mock.unstaged}
@@ -272,57 +225,55 @@ function fileKind(name: string): "ts" | "json" | "file" {
             <span class="text-error">−{deletions}</span>
           </span>
           <span class="ml-1 flex items-center text-faint">
-            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="7" height="16" rx="1"></rect><rect x="14" y="4" width="7" height="16" rx="1"></rect></svg>
-            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h16" stroke-linecap="round"></path></svg>
-            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 4v6M16 14v6M8 10H5m11 4h3M12 4v16" stroke-linecap="round"></path></svg>
-            <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-3-6.7" stroke-linecap="round"></path><path d="M21 4v5h-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <MockIcon name="rows-3" />
+            <MockIcon name="align-left" />
+            <MockIcon name="fold-vertical" />
+            <MockIcon name="refresh-cw" />
           </span>
         </div>
-        <div class="grid min-h-0 flex-1 grid-cols-[128px_minmax(0,1fr)]">
+        <div class="grid min-h-0 flex-1 grid-cols-[148px_minmax(0,1fr)]">
           <div class="min-w-0 overflow-hidden border-line border-r py-1">
-            <p class="flex items-center gap-1 px-1.5 py-0.5 font-medium text-[11px] text-muted">
-              <svg viewBox="0 0 12 12" class="size-2.5 text-faint" fill="currentColor">
-                <path d="M2.4 4.2 6 7.8l3.6-3.6H2.4Z"></path>
-              </svg>
-              {mock.unstaged}
-            </p>
             <ul>
               {
-                gitRows.map((row) =>
-                  row.kind === "dir" ? (
-                    <li class="flex items-center gap-1 py-[2px] text-[11px] text-muted" style={`padding-left: ${10 + row.indent * 8}px`}>
-                      <svg viewBox="0 0 12 12" class="size-2.5 shrink-0 text-faint" fill="currentColor">
-                        <path d="M2.4 4.2 6 7.8l3.6-3.6H2.4Z"></path>
-                      </svg>
+                gitRows.map((row) => (
+                  <li
+                    class:list={[
+                      "flex items-center gap-1 py-[2px] pr-1 text-[11px]",
+                      row.kind === "file" && row.active && "bg-[rgba(210,222,255,0.08)] text-fg",
+                      !(row.kind === "file" && row.active) && "text-muted",
+                    ]}
+                    style={`padding-left: ${6 + row.indent * 10}px`}
+                  >
+                    {row.kind !== "file" ? (
+                      <MockIcon name="chevron-down" class="size-3 shrink-0 text-faint" />
+                    ) : (
+                      <span class="inline-block size-3 shrink-0"></span>
+                    )}
+                    {row.kind === "file" ? (
+                      <span class="inline-flex size-3 shrink-0 items-center justify-center rounded-[2px] bg-[#69b1ff] font-sans font-bold text-[6px] leading-none text-[#0b1220]">TS</span>
+                    ) : (
                       <svg viewBox="0 0 16 16" class="size-3 shrink-0 text-[#ffd452]" fill="currentColor">
                         <path d="M1.75 3A.75.75 0 0 1 2.5 2.25h3.38c.2 0 .39.08.53.22l.9.9h6.44A.75.75 0 0 1 14.5 4.1v8.15a.75.75 0 0 1-.75.75H2.5A.75.75 0 0 1 1.75 12.25V3Z"></path>
                       </svg>
-                      <span class="truncate">{row.name}</span>
-                    </li>
-                  ) : (
-                    <li
-                      class:list={[
-                        "flex items-center gap-1 py-[2px] pr-1.5 text-[11px]",
-                        row.active ? "bg-[rgba(210,222,255,0.08)] text-fg" : "text-muted",
-                      ]}
-                      style={`padding-left: ${10 + row.indent * 8}px`}
-                    >
-                      <span class="inline-flex size-3 shrink-0 items-center justify-center rounded-[2px] bg-[#69b1ff] font-sans font-bold text-[6px] leading-none text-[#0b1220]">TS</span>
-                      <span class="min-w-0 truncate">{row.name}</span>
-                      <span class:list={["ml-auto font-medium text-[10px]", row.letter === "A" ? "text-done" : "text-needs"]}>
-                        {row.letter}
+                    )}
+                    {row.kind === "compact" ? (
+                      <span class="min-w-0 truncate">
+                        src<span class="text-faint"> / </span>checkout
                       </span>
-                    </li>
-                  )
-                )
+                    ) : (
+                      <span class="min-w-0 truncate">{row.name}</span>
+                    )}
+                    {row.kind === "file" && (
+                      <span class:list={["ml-auto font-medium text-[10px]", letterClass(row.letter)]}>{row.letter}</span>
+                    )}
+                  </li>
+                ))
               }
             </ul>
           </div>
           <div class="flex min-w-0 flex-col overflow-hidden">
             <div class="flex items-center gap-1 border-line border-b px-1.5 py-1">
-              <svg viewBox="0 0 12 12" class="size-2.5 shrink-0 text-faint" fill="currentColor">
-                <path d="M2.4 4.2 6 7.8l3.6-3.6H2.4Z"></path>
-              </svg>
+              <MockIcon name="chevron-down" class="size-3 shrink-0 text-faint" />
               <span class="inline-flex size-3.5 shrink-0 items-center justify-center rounded-[2px] bg-[#69b1ff] font-sans font-bold text-[7px] leading-none text-[#0b1220]">TS</span>
               <span class="min-w-0 truncate font-mono text-[11px] text-fg">{activeChange.name}</span>
               <span class="ml-auto inline-flex shrink-0 items-center gap-1 font-mono text-[10px] tabular-nums">
@@ -330,12 +281,8 @@ function fileKind(name: string): "ts" | "json" | "file" {
                 <span class="text-done">+{activeChange.add}</span>
               </span>
               <span class="flex shrink-0 text-faint">
-                <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M3 7h6M3 7l3-3M3 7l3 3M21 17h-6M21 17l-3-3M21 17l-3 3" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-                <svg viewBox="0 0 24 24" class="size-3.5" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path d="M12 5v14M5 12h14" stroke-linecap="round"></path>
-                </svg>
+                <MockIcon name="undo-2" />
+                <MockIcon name="plus" />
               </span>
             </div>
             <p class="px-2 pt-1.5 font-mono text-[10px] text-faint">{mock.hunkHeader}</p>
@@ -350,15 +297,10 @@ function fileKind(name: string): "ts" | "json" | "file" {
               </p>
               <div class="absolute top-0 right-1 flex items-center gap-0.5 rounded-full bg-panel/90 px-0.5 py-0.5 shadow-sm ring-1 ring-line-strong">
                 <span class="flex size-5 items-center justify-center text-faint">
-                  <svg viewBox="0 0 24 24" class="size-3" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M3 12a9 9 0 1 0 3-6.7" stroke-linecap="round"></path>
-                    <path d="M3 4v5h5" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
+                  <MockIcon name="rotate-ccw" class="size-3" />
                 </span>
                 <span class="flex size-5 items-center justify-center text-faint">
-                  <svg viewBox="0 0 24 24" class="size-3" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M12 5v14M5 12h14" stroke-linecap="round"></path>
-                  </svg>
+                  <MockIcon name="plus" class="size-3" />
                 </span>
               </div>
             </div>
