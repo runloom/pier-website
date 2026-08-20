@@ -15,15 +15,18 @@ const labelByLocale: Record<Locale, string> = {
 };
 ---
 
-<details class="group relative">
+<details data-lang-menu class="relative flex h-14 items-center">
   <summary
-    class="inline-flex h-8 cursor-pointer list-none items-center rounded-full border border-transparent px-2.5 font-mono text-[12px] text-muted transition-colors hover:border-line-strong hover:text-fg [&::-webkit-details-marker]:hidden"
+    class="inline-flex h-8 cursor-pointer list-none items-center gap-1 rounded-full border border-line-strong bg-panel/70 px-2.5 font-mono text-[12px] text-muted transition-colors hover:border-[color-mix(in_oklab,var(--brand)_40%,var(--line-strong))] hover:text-fg [&::-webkit-details-marker]:hidden"
     aria-label={dict.a11y.langMenu}
   >
     {LOCALE_META[locale].short}
+    <svg viewBox="0 0 12 12" class="size-2.5 opacity-70" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M2.5 4.5 6 8l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
   </summary>
   <div
-    class="absolute top-[calc(100%+6px)] right-0 z-50 min-w-36 rounded-xl border border-line-strong bg-panel py-1 shadow-[var(--shadow-panel)]"
+    class="absolute top-full right-0 z-50 mt-1.5 w-max min-w-[7.5rem] rounded-2xl border border-line-strong bg-panel p-1 shadow-[var(--shadow-panel)]"
   >
     {
       LOCALES.map((item) => (
@@ -32,13 +35,35 @@ const labelByLocale: Record<Locale, string> = {
           data-lang-switch={item}
           aria-current={item === locale ? "page" : undefined}
           class:list={[
-            "block px-3 py-1.5 text-[13px] transition-colors hover:bg-panel-2 hover:text-fg",
-            item === locale ? "text-brand-ink" : "text-muted",
+            "flex items-center justify-between gap-4 rounded-full px-3 py-1.5 text-[13px] transition-colors",
+            item === locale
+              ? "bg-[color-mix(in_oklab,var(--brand)_12%,transparent)] font-medium text-brand-ink"
+              : "text-muted hover:bg-panel-2 hover:text-fg",
           ]}
         >
-          {labelByLocale[item]}
+          <span>{labelByLocale[item]}</span>
+          <span class="font-mono text-[10px] text-faint">{LOCALE_META[item].short}</span>
         </a>
       ))
     }
   </div>
 </details>
+
+<style>
+  details[data-lang-menu][open] > summary {
+    color: var(--fg);
+    border-color: color-mix(in oklab, var(--brand) 40%, var(--line-strong));
+  }
+  details[data-lang-menu][open] > summary svg {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script>
+  document.addEventListener("click", (event) => {
+    const target = event.target as Node | null;
+    for (const menu of document.querySelectorAll("details[data-lang-menu]")) {
+      if (!menu.contains(target)) menu.removeAttribute("open");
+    }
+  });
+</script>

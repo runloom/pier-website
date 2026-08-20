@@ -13,8 +13,8 @@ export const LOCALE_META: Record<
 > = {
   zh: { html: "zh-CN", og: "zh_CN", hreflang: "zh-CN", short: "中" },
   en: { html: "en", og: "en_US", hreflang: "en", short: "EN" },
-  ja: { html: "ja", og: "ja_JP", hreflang: "ja", short: "日本語" },
-  ko: { html: "ko", og: "ko_KR", hreflang: "ko", short: "한국어" },
+  ja: { html: "ja", og: "ja_JP", hreflang: "ja", short: "JA" },
+  ko: { html: "ko", og: "ko_KR", hreflang: "ko", short: "KO" },
 };
 
 export function getDict(locale: Locale): Dict {
