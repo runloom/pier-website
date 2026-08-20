@@ -21,13 +21,11 @@ export const zh = {
     sub: "让 Claude Code、Codex、OpenCode 等原生 CLI 在本地项目中持续运行；在同一个可保存的工作区查看状态、回到终端并审查 Git 变更。",
     ctaDownload: "下载 macOS 版",
     ctaGithub: "GitHub",
-    shotAlt: "Pier 工作区：左侧终端中的智能体会话，中间文件树，右侧代码审查。",
+    shotAlt: "Pier 工作区：左侧上下两个终端分别运行 Codex 与 Grok，右侧为文件树与代码编辑器。",
     hint: "智能体仍在原生终端中运行——Pier 不是另一套聊天界面。",
   },
   agents: {
     label: "运行你已经在用的智能体 CLI",
-    names: ["Claude Code", "Codex", "OpenCode", "Cursor", "Grok"],
-    more: "……以及任何能在终端里运行的 CLI",
   },
   why: {
     no: "01",
@@ -91,7 +89,7 @@ export const zh = {
       },
       {
         title: "文件与变更",
-        body: "浏览项目文件，审查工作区与暂存区差异，并按文件或片段暂存、取消暂存。",
+        body: "浏览并预览项目文件，审查工作区与暂存区差异，并按文件或片段暂存、取消暂存。",
       },
       {
         title: "Canvas",

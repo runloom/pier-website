@@ -23,13 +23,11 @@ export const en: Dict = {
     sub: "Keep Claude Code, Codex, OpenCode and other native CLIs running in your local projects — watch status, return to the terminal, and review Git changes in one saveable workspace.",
     ctaDownload: "Download for macOS",
     ctaGithub: "GitHub",
-    shotAlt: "Pier workspace: agent sessions in the terminal, a file tree, and code review.",
+    shotAlt: "Pier workspace: Codex and Grok in stacked terminals on the left, the file tree and editor on the right.",
     hint: "Your agents keep running in their native terminals — Pier is not another chat wrapper.",
   },
   agents: {
     label: "Runs the agent CLIs you already use",
-    names: ["Claude Code", "Codex", "OpenCode", "Cursor", "Grok"],
-    more: "…and any CLI that runs in a terminal",
   },
   why: {
     no: "01",
@@ -43,7 +41,7 @@ export const en: Dict = {
       },
       {
         title: "Cross-session status",
-        body: "Running, needs-you, and error sessions are visible in one place. No more hunting pane by pane to find out who is waiting on you.",
+        body: "Running, needs you, and error sessions are visible in one place. No more hunting pane by pane to find out who is waiting on you.",
       },
       {
         title: "Status is an entry point",
@@ -58,11 +56,11 @@ export const en: Dict = {
     steps: [
       {
         title: "Launch",
-        body: "Start Claude Code, Codex, OpenCode, or any native CLI inside a project or Git worktree.",
+        body: "Start Claude Code, Codex, OpenCode, or another native agent CLI inside a project or Git worktree.",
       },
       {
         title: "Watch status",
-        body: "Track running, needs-you, and error states across every session in Pier.",
+        body: "Track running, needs you, and error states across every session in Pier.",
       },
       {
         title: "Return to the terminal",
@@ -85,7 +83,7 @@ export const en: Dict = {
       },
       {
         title: "Session status",
-        body: "See running, needs-you, and error sessions in one place — click any of them to jump back to its terminal.",
+        body: "See running, needs you, and error sessions in one place — click any of them to jump back to its terminal.",
       },
       {
         title: "Parallel isolation",
@@ -93,7 +91,7 @@ export const en: Dict = {
       },
       {
         title: "Files & changes",
-        body: "Browse project files, review working-tree and staged diffs, and stage or unstage by file or hunk.",
+        body: "Browse and preview project files, review working-tree and staged diffs, and stage or unstage by file or hunk.",
       },
       {
         title: "Canvas",

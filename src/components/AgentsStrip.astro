@@ -1,4 +1,5 @@
 ---
+import { AGENT_DISPLAY_NAMES } from "../i18n/agents";
 import { getDict, type Locale } from "../i18n";
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
 }
 
 const dict = getDict(Astro.props.locale);
-const items = [...dict.agents.names, dict.agents.more];
+const items = AGENT_DISPLAY_NAMES;
 ---
 
 <section class="border-line border-y bg-bg-deep/60 py-10">
@@ -15,6 +16,8 @@ const items = [...dict.agents.names, dict.agents.more];
   </p>
   <div
     class="marquee mt-6 overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]"
+    role="img"
+    aria-label={items.join(" · ")}
   >
     <div class="marquee-track flex w-max items-center">
       {

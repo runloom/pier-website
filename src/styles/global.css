@@ -332,7 +332,7 @@ body {
 }
 
 .marquee-track {
-  animation: marquee 36s linear infinite;
+  animation: marquee 80s linear infinite;
 }
 
 .marquee:hover .marquee-track {
