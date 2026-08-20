@@ -51,9 +51,11 @@ export function ogLocale(locale: Locale): string {
   return LOCALE_META[locale].og;
 }
 
+import { PIER_RELEASES_LATEST_API, PIER_REPO } from "../lib/github";
+
 /** 仓库与外链常量（单一来源）。 */
-export const REPO = "https://github.com/runloom/pier";
-export const REPO_API_LATEST = "https://api.github.com/repos/runloom/pier/releases/latest";
+export const REPO = PIER_REPO;
+export const REPO_API_LATEST = PIER_RELEASES_LATEST_API;
 export const LINKS = {
   releases: `${REPO}/releases`,
   latestRelease: `${REPO}/releases/latest`,
