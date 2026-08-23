@@ -19,7 +19,9 @@ const nav = [
 ];
 ---
 
-<header class="sticky top-0 z-40 border-line border-b bg-bg/78 backdrop-blur-md">
+<header
+  class="sticky top-0 z-40 border-line border-b bg-bg/78 backdrop-blur-md pointer-coarse:bg-bg/97 pointer-coarse:backdrop-blur-none"
+>
   <div class="relative mx-auto flex h-14 max-w-6xl items-center gap-6 overflow-visible px-5">
     <a href={localeHome(locale)} class="flex items-center gap-2.5" aria-label="Pier">
       <img src={withBase("/mark.svg")} alt="" width="48" height="36" class="block h-9 w-auto shrink-0" />

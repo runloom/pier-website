@@ -108,13 +108,26 @@ html {
   }
 }
 
+html,
+body {
+  /* 兜底：老 WebKit（<16）不认 clip，会连同声明一起丢弃，故先给 hidden；
+     clip 不产生滚动容器，position: sticky 不受影响。 */
+  overflow-x: hidden;
+}
+
+@supports (overflow-x: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: clip;
 }
 
 ::selection {
@@ -139,7 +152,8 @@ body {
   letter-spacing: -0.02em;
   font-weight: 800;
   text-wrap: balance;
-  /* 中文只在空格与标点处断行，避免词中折行 */
+  /* 中文 keep-all 下，无空格/标点的长串不可断；窄屏兜底允许紧急断行 */
+  overflow-wrap: anywhere;
   word-break: keep-all;
 }
 
