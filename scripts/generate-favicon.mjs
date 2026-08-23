@@ -67,8 +67,8 @@ function paddedRect(x, y, w, h, padRatio) {
 }
 
 function coverSquare(x, y, w, h, fill) {
-  // 以较短边铺满方形（站标偏横向，会略裁左右坞臂），标签栏才够大。
-  const side = Math.min(w, h) / fill;
+  // 以较长边铺满方形（contain）：完整保留左右坞臂，标签栏里仍够大。
+  const side = Math.max(w, h) / fill;
   return [x + w / 2 - side / 2, y + h / 2 - side / 2, side, side];
 }
 
