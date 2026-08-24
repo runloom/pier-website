@@ -80,14 +80,15 @@
 由三部分组成：
 
 1. **命令面板仿真卡**（纯 CSS，静态）：
-   - 卡片用 `--screen` 底色 + `--line-strong` 边框 + JetBrains Mono，形似应用内面板；
-   - 搜索行：`>` 提示符 + 静态查询文本「切换主题」+ 复用现有 `.caret` 光标闪烁动画；
-   - 列表三行，每行含分组标签与动作名：「视图 · 切换主题」（此行带「最近使用」徽章，对应 MRU 排序事实）、「面板 · 向右分屏」、「文件 · 快速打开…」；
+   - 外壳复刻应用内命令面板形态：`rounded-3xl`、`bg-popover`、`p-1`、`shadow-xl`（对齐上游 `packages/ui/src/command.tsx`）；
+   - 输入行：放大镜图标 + 占位符「搜索命令…」（`h-7`、`rounded-2xl`、`bg-input/50`，占位符 30% 前景）；
+   - 列表为分组标题 + 动作行（图标 + 标题 + 右侧等宽快捷键，选中行 `bg-accent` 中性灰），动作与分组用应用真实文案：面板 / 向右拆分 ⌘D、面板 / 切换面板最大化 ⇧⌘M、文件 / 转到文件 ⌘P（对齐 `action-rows.tsx` 与上游 i18n）；
+   - 配色取应用深色主题令牌实测值（popover #171717、accent #222222、muted-foreground #8f8f8f），固定不随站点主题翻转；
    - 装饰性内容一律 `aria-hidden="true"`。
 2. **键位卡网格**（2 列 × 3 行）：上表六个键位，键帽用新 `.kbd` 样式，动作名为正文文字；
 3. **尾注一行**：命令面板聚合全部动作，按最近使用排序，官方插件也能向它贡献命令；设置页可搜索快捷键，绑定支持自定义。
 
-动效仅复用既有 `caret-blink` 与 `data-reveal` 滚动显现；`prefers-reduced-motion` 下全部静止（沿用全局既有规则，实施时确认 `.caret` 也被覆盖）。
+动效仅保留 `data-reveal` 滚动显现；`prefers-reduced-motion` 下静止（全局既有规则）。
 
 ## 文案织入（最小改动）
 
@@ -122,10 +123,12 @@ performance: {
   keys: {
     title: "一切皆可 ⇧⌘P",
     note: "命令面板聚合全部动作：按最近使用排序、支持模糊搜索，官方插件也能向它贡献命令。设置页可搜索快捷键，绑定支持自定义。",
-    mruBadge: "最近使用",
-    paletteQuery: "切换主题",
-    groups: ["视图", "面板", "文件"],
-    actions: ["切换主题", "向右分屏", "快速打开…"],
+    placeholder: "搜索命令…",
+    rows: [
+      { group: "面板", title: "向右拆分", keys: "⌘D" },
+      { group: "面板", title: "切换面板最大化", keys: "⇧⌘M" },
+      { group: "文件", title: "转到文件", keys: "⌘P" },
+    ],
     shortcuts: [
       { keys: "⇧⌘P", label: "命令面板" },
       { keys: "⌘P", label: "快速打开文件" },

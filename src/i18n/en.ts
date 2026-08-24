@@ -99,10 +99,12 @@ export const en: Dict = {
     keys: {
       title: "Everything is ⇧⌘P away",
       note: "The command palette gathers every action: fuzzy search ranked by recent use, and official plugins can contribute commands. Search shortcuts in Settings and remap bindings freely.",
-      mruBadge: "Recent",
-      paletteQuery: "Switch theme",
-      groups: ["View", "Panels", "Files"],
-      actions: ["Switch theme", "Split right", "Quick Open…"],
+      placeholder: "Search commands…",
+      rows: [
+        { group: "Panel", title: "Split Right", keys: "⌘D" },
+        { group: "Panel", title: "Toggle Panel Maximize", keys: "⇧⌘M" },
+        { group: "File", title: "Go to File", keys: "⌘P" },
+      ],
       shortcuts: [
         { keys: "⇧⌘P", label: "Command palette" },
         { keys: "⌘P", label: "Quick Open file" },

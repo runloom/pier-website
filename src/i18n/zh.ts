@@ -97,10 +97,12 @@ export const zh = {
     keys: {
       title: "一切皆可 ⇧⌘P",
       note: "命令面板聚合全部动作：按最近使用排序、支持模糊搜索，官方插件也能向它贡献命令。设置页可搜索快捷键，绑定支持自定义。",
-      mruBadge: "最近使用",
-      paletteQuery: "切换主题",
-      groups: ["视图", "面板", "文件"],
-      actions: ["切换主题", "向右分屏", "快速打开…"],
+      placeholder: "搜索命令…",
+      rows: [
+        { group: "面板", title: "向右拆分", keys: "⌘D" },
+        { group: "面板", title: "切换面板最大化", keys: "⇧⌘M" },
+        { group: "文件", title: "转到文件", keys: "⌘P" },
+      ],
       shortcuts: [
         { keys: "⇧⌘P", label: "命令面板" },
         { keys: "⌘P", label: "快速打开文件" },

@@ -99,10 +99,12 @@ export const ko: Dict = {
     keys: {
       title: "모든 것은 ⇧⌘P에서",
       note: "커맨드 팔레트에 모든 동작을 모았습니다: 최근 사용 순으로 정렬되는 퍼지 검색, 공식 플러그인도 명령을 제공할 수 있습니다. 설정에서 단축키를 검색하고 자유롭게 재배정하세요.",
-      mruBadge: "최근 사용",
-      paletteQuery: "테마 전환",
-      groups: ["보기", "패널", "파일"],
-      actions: ["테마 전환", "오른쪽 분할", "빠른 열기…"],
+      placeholder: "명령 검색…",
+      rows: [
+        { group: "패널", title: "오른쪽으로 분할", keys: "⌘D" },
+        { group: "패널", title: "패널 최대화 전환", keys: "⇧⌘M" },
+        { group: "파일", title: "파일로 이동", keys: "⌘P" },
+      ],
       shortcuts: [
         { keys: "⇧⌘P", label: "커맨드 팔레트" },
         { keys: "⌘P", label: "빠른 파일 열기" },

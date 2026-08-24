@@ -99,10 +99,12 @@ export const ja: Dict = {
     keys: {
       title: "すべては ⇧⌘P から",
       note: "コマンドパレットにすべてのアクションを集約：あいまい検索と最近使用順の並び替えに対応し、公式プラグインもコマンドを提供できます。設定ではショートカットを検索でき、割り当ては自由に変更できます。",
-      mruBadge: "最近使用",
-      paletteQuery: "テーマを切り替え",
-      groups: ["表示", "パネル", "ファイル"],
-      actions: ["テーマを切り替え", "右に分割", "クイックオープン…"],
+      placeholder: "コマンドを検索…",
+      rows: [
+        { group: "パネル", title: "右に分割", keys: "⌘D" },
+        { group: "パネル", title: "パネルの最大化を切り替え", keys: "⇧⌘M" },
+        { group: "ファイル", title: "ファイルへ移動", keys: "⌘P" },
+      ],
       shortcuts: [
         { keys: "⇧⌘P", label: "コマンドパレット" },
         { keys: "⌘P", label: "クイックオープン" },
