@@ -5,12 +5,13 @@ export const en: Dict = {
   meta: {
     title: "Pier — The local AI dev workbench",
     description:
-      "Keep Claude Code, Codex, OpenCode and other native CLIs running in your local projects. See session status across agents, return to the terminal, and review Git changes in one saveable workspace. Free and open source for macOS.",
+      "Keep Claude Code, Codex, OpenCode and other native CLIs running in your local projects. See session status across agents, return to the terminal, and review Git changes in one saveable workspace. The terminal runs on the Ghostty engine with GPU-accelerated rendering. Free and open source for macOS.",
     ogAlt: "Pier — The local AI dev workbench",
   },
   nav: {
     why: "Why",
     workflow: "Workflow",
+    performance: "Performance",
     features: "Features",
     cli: "CLI & plugins",
     download: "Download",
@@ -72,14 +73,54 @@ export const en: Dict = {
       },
     ],
   },
-  features: {
+  performance: {
     no: "03",
+    label: "Performance & feel",
+    title: "Fast comes from the engine. Smooth comes from design.",
+    lead: "The terminal kernel sets the floor; the paths your fingers take set the feel. Pier treats both as product capabilities.",
+    engine: {
+      title: "Ghostty engine, native all the way down",
+      points: [
+        {
+          title: "Native rendering",
+          body: "Terminals are driven by Ghostty native (an XCFramework built from Swift / Zig) with GPU-accelerated rendering — heavy output stays smooth under load.",
+        },
+        {
+          title: "Sessions outlive the UI",
+          body: "After a UI reload or restart, running terminals remain usable.",
+        },
+        {
+          title: "Polished for agent TUIs",
+          body: "Pier maintains its own set of Ghostty patches for details that matter to agent work — cursor visibility, input focus handoff, and friends.",
+        },
+      ],
+      footnote: "macOS · Swift / Zig / libghostty",
+    },
+    keys: {
+      title: "Everything is ⇧⌘P away",
+      note: "The command palette gathers every action: fuzzy search ranked by recent use, and official plugins can contribute commands. Search shortcuts in Settings and remap bindings freely.",
+      mruBadge: "Recent",
+      paletteQuery: "Switch theme",
+      groups: ["View", "Panels", "Files"],
+      actions: ["Switch theme", "Split right", "Quick Open…"],
+      shortcuts: [
+        { keys: "⇧⌘P", label: "Command palette" },
+        { keys: "⌘P", label: "Quick Open file" },
+        { keys: "⌘T", label: "New tab" },
+        { keys: "⌘D", label: "Split pane" },
+        { keys: "⌘B", label: "Toggle sidebar" },
+        { keys: "⌘F", label: "Find in terminal" },
+      ],
+    },
+  },
+  features: {
+    no: "04",
     label: "Core capabilities",
     title: "Host terminals, surface status, organize the workspace",
     items: [
       {
         title: "Native terminals",
-        body: "Run shells and CLI coding agents inside projects or worktrees. Running terminals survive UI reloads and stay usable.",
+        body: "A native terminal built on the Ghostty engine with GPU-accelerated rendering. Run shells and CLI coding agents inside projects or worktrees — running sessions survive UI reloads.",
       },
       {
         title: "Session status",
@@ -104,7 +145,7 @@ export const en: Dict = {
     ],
   },
   cli: {
-    no: "04",
+    no: "05",
     label: "Local CLI & official plugins",
     title: "Beyond the workbench, there's a command line",
     cliTitle: "pier · control the Pier already running on your machine",
@@ -182,6 +223,10 @@ export const en: Dict = {
       {
         q: "Where does my data live?",
         a: "Everything stays local: preferences and layouts are local JSON files, raw terminal output is written to local segment files, code changes are read live from Git, and secrets go to the system's secure storage.",
+      },
+      {
+        q: "Which terminal engine does Pier use?",
+        a: "The terminal runs on Ghostty's native core (Swift / Zig) with GPU-accelerated rendering. Pier maintains patches on top of it for agent-TUI scenarios; running terminals survive UI reloads.",
       },
     ],
   },

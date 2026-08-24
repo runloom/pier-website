@@ -5,12 +5,13 @@ export const ko: Dict = {
   meta: {
     title: "Pier — 로컬 AI 개발 워크벤치",
     description:
-      "Claude Code, Codex, OpenCode 같은 네이티브 CLI를 로컬 프로젝트에서 계속 실행하고, 세션 상태를 보고, 터미널로 돌아가 Git 변경을 같은 저장 가능한 워크스페이스에서 검토하세요. macOS용 무료 오픈 소스.",
+      "Claude Code, Codex, OpenCode 같은 네이티브 CLI를 로컬 프로젝트에서 계속 실행하고, 세션 상태를 보고, 터미널로 돌아가 Git 변경을 같은 저장 가능한 워크스페이스에서 검토하세요. 터미널은 Ghostty 엔진 기반의 GPU 가속 렌더링을 사용합니다. macOS용 무료 오픈 소스.",
     ogAlt: "Pier — 로컬 AI 개발 워크벤치",
   },
   nav: {
     why: "이유",
     workflow: "워크플로",
+    performance: "성능",
     features: "기능",
     cli: "CLI와 플러그인",
     download: "다운로드",
@@ -72,14 +73,54 @@ export const ko: Dict = {
       },
     ],
   },
-  features: {
+  performance: {
     no: "03",
+    label: "성능과 사용감",
+    title: "빠름은 엔진에서, 편안함은 설계에서.",
+    lead: "터미널 커널이 하한을 정하고, 손가락이 움직이는 경로가 사용감을 정합니다. Pier는 두 가지 모두를 제품 기능으로 다듬습니다.",
+    engine: {
+      title: "Ghostty 엔진, 끝까지 네이티브",
+      points: [
+        {
+          title: "네이티브 렌더링",
+          body: "터미널은 Ghostty native(Swift / Zig로 빌드한 XCFramework)가 구동하고 GPU 가속 렌더링을 사용합니다. 대량 출력 스크롤도 부드럽게 따라옵니다.",
+        },
+        {
+          title: "세션은 UI보다 오래 삽니다",
+          body: "UI를 다시 로드하거나 재시작한 후에도 실행 중인 터미널은 그대로 사용할 수 있습니다.",
+        },
+        {
+          title: "에이전트 TUI에 맞춘 다듬기",
+          body: "Pier는 자체 Ghostty 패치를 유지 관리하며, 커서 표시와 입력 포커스 전환 같은 에이전트 경험의 세부 사항을 다듬습니다.",
+        },
+      ],
+      footnote: "macOS · Swift / Zig / libghostty",
+    },
+    keys: {
+      title: "모든 것은 ⇧⌘P에서",
+      note: "커맨드 팔레트에 모든 동작을 모았습니다: 최근 사용 순으로 정렬되는 퍼지 검색, 공식 플러그인도 명령을 제공할 수 있습니다. 설정에서 단축키를 검색하고 자유롭게 재배정하세요.",
+      mruBadge: "최근 사용",
+      paletteQuery: "테마 전환",
+      groups: ["보기", "패널", "파일"],
+      actions: ["테마 전환", "오른쪽 분할", "빠른 열기…"],
+      shortcuts: [
+        { keys: "⇧⌘P", label: "커맨드 팔레트" },
+        { keys: "⌘P", label: "빠른 파일 열기" },
+        { keys: "⌘T", label: "새 탭" },
+        { keys: "⌘D", label: "창 분할" },
+        { keys: "⌘B", label: "사이드바 전환" },
+        { keys: "⌘F", label: "터미널 내 검색" },
+      ],
+    },
+  },
+  features: {
+    no: "04",
     label: "핵심 기능",
     title: "터미널을 담고, 상태를 보여 주고, 현장을 정리",
     items: [
       {
         title: "네이티브 터미널",
-        body: "프로젝트나 작업 트리에서 셸과 CLI 코딩 에이전트를 실행합니다. 화면을 다시 불러와도 실행 중인 터미널은 그대로 쓸 수 있습니다.",
+        body: "Ghostty 엔진 기반의 네이티브 터미널로 GPU 가속 렌더링을 제공합니다. 프로젝트나 작업 트리에서 Shell과 CLI 코딩 에이전트를 실행하고, UI를 다시 로드해도 실행 중인 세션은 그대로 유지됩니다.",
       },
       {
         title: "세션 상태",
@@ -104,7 +145,7 @@ export const ko: Dict = {
     ],
   },
   cli: {
-    no: "04",
+    no: "05",
     label: "로컬 CLI와 공식 플러그인",
     title: "워크벤치 밖에, 명령줄이 하나 더 있습니다",
     cliTitle: "pier · 이 Mac에서 실행 중인 Pier 제어",
@@ -182,6 +223,10 @@ export const ko: Dict = {
       {
         q: "데이터는 어디에 있나요?",
         a: "모두 로컬입니다. 설정과 레이아웃은 로컬 JSON, 터미널 출력은 로컬 구간 파일, 코드 변경은 Git에서 실시간으로 읽고, 비밀은 시스템 보안 저장소로 갑니다.",
+      },
+      {
+        q: "Pier는 어떤 터미널 엔진을 사용하나요?",
+        a: "터미널은 Ghostty의 네이티브 코어(Swift / Zig)를 기반으로 GPU 가속 렌더링으로 그려집니다. Pier는 에이전트 TUI 시나리오를 위한 자체 패치를 유지 관리하며, UI를 다시 로드한 후에도 실행 중인 터미널은 그대로 사용할 수 있습니다.",
       },
     ],
   },

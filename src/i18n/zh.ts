@@ -3,12 +3,13 @@ export const zh = {
   meta: {
     title: "Pier — 本地 AI 开发工作台",
     description:
-      "让 Claude Code、Codex、OpenCode 等原生 CLI 在本地项目中持续运行；在同一个可保存的工作区查看会话状态、回到终端并审查 Git 变更。macOS 免费开源。",
+      "让 Claude Code、Codex、OpenCode 等原生 CLI 在本地项目中持续运行；在同一个可保存的工作区查看会话状态、回到终端并审查 Git 变更。终端基于 Ghostty 内核，GPU 加速渲染。macOS 免费开源。",
     ogAlt: "Pier — 本地 AI 开发工作台",
   },
   nav: {
     why: "为什么",
     workflow: "工作流",
+    performance: "性能",
     features: "能力",
     cli: "CLI 与插件",
     download: "下载",
@@ -70,14 +71,54 @@ export const zh = {
       },
     ],
   },
-  features: {
+  performance: {
     no: "03",
+    label: "性能与手感",
+    title: "快是内核给的，顺手是设计出来的",
+    lead: "终端内核决定下限，操作路径决定手感。Pier 把两者都当作产品能力来打磨。",
+    engine: {
+      title: "Ghostty 内核，原生到底",
+      points: [
+        {
+          title: "原生渲染",
+          body: "终端由 Ghostty native（Swift / Zig 编译的 XCFramework）驱动，GPU 加速渲染，大段输出滚动依然跟手。",
+        },
+        {
+          title: "会话比界面活得久",
+          body: "界面重载或重启后，正在运行的终端仍可继续使用。",
+        },
+        {
+          title: "为智能体 TUI 打磨",
+          body: "Pier 维护自己的 Ghostty 补丁集，处理光标可见性、输入焦点转移这类影响智能体体验的细节。",
+        },
+      ],
+      footnote: "macOS · Swift / Zig / libghostty",
+    },
+    keys: {
+      title: "一切皆可 ⇧⌘P",
+      note: "命令面板聚合全部动作：按最近使用排序、支持模糊搜索，官方插件也能向它贡献命令。设置页可搜索快捷键，绑定支持自定义。",
+      mruBadge: "最近使用",
+      paletteQuery: "切换主题",
+      groups: ["视图", "面板", "文件"],
+      actions: ["切换主题", "向右分屏", "快速打开…"],
+      shortcuts: [
+        { keys: "⇧⌘P", label: "命令面板" },
+        { keys: "⌘P", label: "快速打开文件" },
+        { keys: "⌘T", label: "新建标签" },
+        { keys: "⌘D", label: "分屏" },
+        { keys: "⌘B", label: "折叠侧栏" },
+        { keys: "⌘F", label: "终端搜索" },
+      ],
+    },
+  },
+  features: {
+    no: "04",
     label: "核心能力",
     title: "承载终端、呈现状态、组织开发现场",
     items: [
       {
         title: "原生终端",
-        body: "在项目或工作树中运行 Shell 和 CLI 编程智能体；界面重新加载后，正在运行的终端仍可继续使用。",
+        body: "基于 Ghostty 内核的原生终端，GPU 加速渲染；在项目或工作树中运行 Shell 和 CLI 编程智能体，界面重载后正在运行的会话仍可继续使用。",
       },
       {
         title: "会话状态",
@@ -102,7 +143,7 @@ export const zh = {
     ],
   },
   cli: {
-    no: "04",
+    no: "05",
     label: "本机 CLI 与官方插件",
     title: "工作台之外，还有一条命令行",
     cliTitle: "pier · 控制本机正在运行的 Pier",
@@ -181,6 +222,10 @@ export const zh = {
         q: "我的数据存在哪里？",
         a: "全部在本地：偏好与布局存为本地 JSON 文件，终端原始输出写本地分段文件，代码变更实时读取 Git，密钥交给系统安全存储。",
       },
+      {
+        q: "Pier 用什么终端内核？",
+        a: "终端基于 Ghostty 的原生内核（Swift / Zig），由 GPU 加速渲染。Pier 在其上维护针对智能体 TUI 场景的补丁；界面重载后，正在运行的终端仍可继续使用。",
+      },
     ],
   },
   footer: {
@@ -225,7 +270,7 @@ type DeepStringify<T> = {
   [K in keyof T]: T[K] extends string
     ? string
     : T[K] extends readonly (infer U)[]
-      ? readonly DeepStringify<U>[]
+      ? readonly (U extends string ? string : DeepStringify<U>)[]
       : T[K] extends object
         ? DeepStringify<T[K]>
         : T[K];
