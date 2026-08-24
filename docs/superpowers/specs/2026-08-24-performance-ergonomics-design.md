@@ -29,7 +29,7 @@
 | ⌘P | 快速打开文件 | `pier.files.quickOpen` |
 | ⌘T | 新建终端标签 | `pier.panel.newTerminal` |
 | ⌘D | 向右分屏 | `pier.panel.splitRight` |
-| ⌘B | 折叠/展开侧栏（文件树与变更树） | `pier.files.tree.toggle` 等 |
+| ⌘⇧Y | 跳到下一个需要你处理的 | `pier.agents.focusWaiting` |
 | ⌘F | 终端内搜索 | `pier.terminal.search` |
 
 ## 目标与非目标
@@ -134,7 +134,7 @@ performance: {
       { keys: "⌘P", label: "快速打开文件" },
       { keys: "⌘T", label: "新建标签" },
       { keys: "⌘D", label: "分屏" },
-      { keys: "⌘B", label: "折叠侧栏" },
+      { keys: "⌘⇧Y", label: "跳到下一个需要你处理的" },
       { keys: "⌘F", label: "终端搜索" },
     ],
   },
