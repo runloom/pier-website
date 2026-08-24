@@ -8,9 +8,21 @@ interface Props {
 
 const dict = getDict(Astro.props.locale);
 const { faq } = dict;
+
+// FAQPage 结构化数据：与页面可见的 <details> 问答一一对应，有机会出富摘要
+const faqLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.items.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
+});
 ---
 
 <section id="faq" class="relative border-line border-t bg-bg-deep/50">
+  <script is:inline type="application/ld+json" set:html={faqLd} />
   <div class="mx-auto max-w-3xl px-5 py-24 sm:py-28">
     <SectionHead label={faq.label} title={faq.title} center />
 

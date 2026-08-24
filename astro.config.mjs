@@ -15,6 +15,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      // 告知搜索引擎各 URL 的最近变更时间（每次构建时刷新）
+      lastmod: new Date(),
       i18n: {
         defaultLocale: "zh",
         locales: {

@@ -2,8 +2,11 @@
 import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import heroScreenshot from "../assets/hero.png";
+// 预加载首屏必需的 latin 子集字体（与 CSS @font-face 指向同一文件，Vite 去重为同一产物）
+import archivoLatinWoff2 from "@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url";
+import monoLatinWoff2 from "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url";
 import {
-  BASE,
   getDict,
   htmlLang,
   LINKS,
@@ -11,6 +14,7 @@ import {
   LOCALES,
   LOCALE_META,
   ogLocale,
+  REPO,
   withBase,
   type Locale,
 } from "../i18n";
@@ -34,6 +38,15 @@ const localeUrls = Object.fromEntries(
 const ogImage = new URL(withBase("/og.png"), site);
 const otherLocales = LOCALES.filter((item) => item !== locale);
 
+const screenshot = new URL(withBase(heroScreenshot.src), site);
+
+const organization = {
+  "@type": "Organization",
+  name: "Runloom",
+  url: site.href,
+  sameAs: [REPO],
+};
+
 const jsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -43,9 +56,13 @@ const jsonLd = JSON.stringify({
   description: pageDescription,
   url: canonical.href,
   image: ogImage.href,
+  screenshot: screenshot.href,
+  featureList: dict.features.items.map((item) => item.title),
   license: "https://www.gnu.org/licenses/agpl-3.0.html",
   downloadUrl: LINKS.releases,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  author: organization,
+  publisher: organization,
   inLanguage: LOCALES.map((item) => LOCALE_META[item].html),
 });
 ---
@@ -67,35 +84,6 @@ const jsonLd = JSON.stringify({
       })();
     </script>
 
-    <!-- 仅中文首页、无显式偏好时按系统语言跳转 -->
-    <script is:inline define:vars={{ base: BASE }}>
-      (() => {
-        try {
-          const path = window.location.pathname.replace(/\/+$/, "/");
-          const zhRoot = `${base}/`;
-          if (path !== zhRoot && path !== base) return;
-          const stored = localStorage.getItem("pier-lang");
-          if (stored === "zh") return;
-          const target = (code) => {
-            if (code === "en") return `${base}/en/`;
-            if (code === "ja") return `${base}/ja/`;
-            if (code === "ko") return `${base}/ko/`;
-            return null;
-          };
-          if (stored) {
-            const href = target(stored);
-            if (href) window.location.replace(href);
-            return;
-          }
-          const sys = (navigator.languages?.[0] || navigator.language || "zh").toLowerCase();
-          if (sys.startsWith("zh")) return;
-          if (sys.startsWith("ja")) window.location.replace(`${base}/ja/`);
-          else if (sys.startsWith("ko")) window.location.replace(`${base}/ko/`);
-          else window.location.replace(`${base}/en/`);
-        } catch {}
-      })();
-    </script>
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
@@ -109,6 +97,9 @@ const jsonLd = JSON.stringify({
     ))}
     <link rel="alternate" hreflang="x-default" href={localeUrls.zh} />
     <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
+
+    <link rel="preload" as="font" type="font/woff2" href={archivoLatinWoff2} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={monoLatinWoff2} crossorigin />
 
     <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
     <link rel="icon" type="image/png" sizes="32x32" href={withBase("/favicon-32.png")} />
@@ -165,14 +156,6 @@ const jsonLd = JSON.stringify({
       );
       for (const el of els) io.observe(el);
 
-      document.addEventListener("click", (e) => {
-        const el = (e.target as HTMLElement).closest<HTMLElement>("[data-lang-switch]");
-        if (el?.dataset.langSwitch) {
-          try {
-            localStorage.setItem("pier-lang", el.dataset.langSwitch);
-          } catch {}
-        }
-      });
     </script>
   </body>
 </html>
