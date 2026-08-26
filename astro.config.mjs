@@ -3,9 +3,9 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 
-// Custom domain on GitHub Pages: https://pier.runloom.ai
+// Custom domain on GitHub Pages: https://pier.codes
 export default defineConfig({
-  site: "https://pier.runloom.ai",
+  site: "https://pier.codes",
   i18n: {
     defaultLocale: "zh",
     locales: ["zh", "en", "ja", "ko"],
