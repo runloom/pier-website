@@ -98,8 +98,8 @@ export const en: Dict = {
       footnote: "macOS · Swift / Zig / libghostty",
     },
     keys: {
-      title: "Everything is ⇧⌘P away",
-      note: "The command palette gathers every action: fuzzy search ranked by recent use, and official plugins can contribute commands. Search shortcuts in Settings and remap bindings freely.",
+      title: "Search any command. Jump with one key",
+      note: "The command palette ranks actions by recent use and fuzzy search. Official plugins can add commands. Jump to sessions that need attention with one key. Search and remap shortcuts in Settings.",
       placeholder: "Search commands…",
       rows: [
         { group: "Panel", title: "Split Right", keys: "⌘D" },
@@ -109,10 +109,10 @@ export const en: Dict = {
       shortcuts: [
         { keys: "⇧⌘P", label: "Command palette" },
         { keys: "⌘P", label: "Quick Open file" },
-        { keys: "⌘T", label: "New tab" },
-        { keys: "⌘⇧Y", label: "Jump to next needing attention" },
+        { keys: "⌘T", label: "New terminal" },
+        { keys: "⌘⇧Y", label: "Next needing attention" },
         { keys: "⌘D", label: "Split pane" },
-        { keys: "⌘F", label: "Find in terminal" },
+        { keys: "⌘F", label: "Find in panel" },
       ],
     },
   },

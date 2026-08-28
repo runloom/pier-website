@@ -98,8 +98,8 @@ export const ko: Dict = {
       footnote: "macOS · Swift / Zig / libghostty",
     },
     keys: {
-      title: "모든 것은 ⇧⌘P에서",
-      note: "커맨드 팔레트에 모든 동작을 모았습니다: 최근 사용 순으로 정렬되는 퍼지 검색, 공식 플러그인도 명령을 제공할 수 있습니다. 설정에서 단축키를 검색하고 자유롭게 재배정하세요.",
+      title: "명령은 검색, 급한 일은 바로 이동",
+      note: "커맨드 팔레트는 최근 사용 순 퍼지 검색으로 동작을 모으고, 공식 플러그인도 명령을 제공할 수 있습니다. 처리가 필요한 세션은 바로 이동합니다. 설정에서 단축키를 검색하고 자유롭게 재배정하세요.",
       placeholder: "명령 검색…",
       rows: [
         { group: "패널", title: "오른쪽으로 분할", keys: "⌘D" },
@@ -109,10 +109,10 @@ export const ko: Dict = {
       shortcuts: [
         { keys: "⇧⌘P", label: "커맨드 팔레트" },
         { keys: "⌘P", label: "빠른 파일 열기" },
-        { keys: "⌘T", label: "새 탭" },
-        { keys: "⌘⇧Y", label: "다음 처리 필요로 이동" },
+        { keys: "⌘T", label: "새 터미널" },
+        { keys: "⌘⇧Y", label: "처리가 필요한 다음으로" },
         { keys: "⌘D", label: "창 분할" },
-        { keys: "⌘F", label: "터미널 내 검색" },
+        { keys: "⌘F", label: "패널에서 찾기" },
       ],
     },
   },

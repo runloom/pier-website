@@ -27,10 +27,10 @@
 | --- | --- | --- |
 | ⇧⌘P | 命令面板 | `pier.commandPalette.toggle` |
 | ⌘P | 快速打开文件 | `pier.files.quickOpen` |
-| ⌘T | 新建终端标签 | `pier.panel.newTerminal` |
+| ⌘T | 新建终端 | `pier.panel.newTerminal` |
 | ⌘D | 向右分屏 | `pier.panel.splitRight` |
-| ⌘⇧Y | 跳到下一个需要你处理的 | `pier.agents.focusWaiting` |
-| ⌘F | 终端内搜索 | `pier.terminal.search` |
+| ⌘⇧Y | 下一个需要你处理 | `pier.agents.focusWaiting` |
+| ⌘F | 面板内查找 | `pier.find` |
 
 ## 目标与非目标
 
@@ -75,7 +75,7 @@
 
 脚注（mono 小字）：`macOS · Swift / Zig / libghostty`
 
-### 右列：一切皆可 ⇧⌘P
+### 右列：命令可搜，急事一键跳转
 
 由三部分组成：
 
@@ -121,8 +121,8 @@ performance: {
     footnote: "macOS · Swift / Zig / libghostty",
   },
   keys: {
-    title: "一切皆可 ⇧⌘P",
-    note: "命令面板聚合全部动作：按最近使用排序、支持模糊搜索，官方插件也能向它贡献命令。设置页可搜索快捷键，绑定支持自定义。",
+    title: "命令可搜，急事一键跳转",
+    note: "命令面板按最近使用排序，并支持模糊搜索；官方插件也可贡献命令。需要你处理时可一键跳转。设置中可搜索并自定义快捷键。",
     placeholder: "搜索命令…",
     rows: [
       { group: "面板", title: "向右拆分", keys: "⌘D" },
@@ -132,10 +132,10 @@ performance: {
     shortcuts: [
       { keys: "⇧⌘P", label: "命令面板" },
       { keys: "⌘P", label: "快速打开文件" },
-      { keys: "⌘T", label: "新建标签" },
+      { keys: "⌘T", label: "新建终端" },
+      { keys: "⌘⇧Y", label: "下一个需要你处理" },
       { keys: "⌘D", label: "分屏" },
-      { keys: "⌘⇧Y", label: "跳到下一个需要你处理的" },
-      { keys: "⌘F", label: "终端搜索" },
+      { keys: "⌘F", label: "面板内查找" },
     ],
   },
 },

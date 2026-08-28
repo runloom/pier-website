@@ -14,7 +14,7 @@
 
 - 禁止新增任何 `<script>`；动效只允许既有 `caret-blink` 与 `data-reveal`。
 - 性能/快捷键措辞不得超出 spec「产品事实依据」表；不出现任何基准数字。
-- 键帽符号四语言一致：`⇧⌘P` `⌘P` `⌘T` `⌘D` `⌘B` `⌘F`。
+- 键帽符号四语言一致：`⇧⌘P` `⌘P` `⌘T` `⌘D` `⌘⇧Y` `⌘F`。
 - 每个字典编辑后必须保持 zh/en/ja/ko 结构同构（`pnpm check` 的 `Dict` 类型校验把关）。
 - 颜色只用既有主题令牌（`--panel`、`--panel-2`、`--screen`、`--line(-strong)`、`--brand*` 等）；不加依赖、不加字体。
 - 章节编号最终态：performance=03、features=04、cli=05。
@@ -87,8 +87,8 @@
       footnote: "macOS · Swift / Zig / libghostty",
     },
     keys: {
-      title: "一切皆可 ⇧⌘P",
-      note: "命令面板聚合全部动作：按最近使用排序、支持模糊搜索，官方插件也能向它贡献命令。设置页可搜索快捷键，绑定支持自定义。",
+      title: "命令可搜，急事一键跳转",
+      note: "命令面板按最近使用排序，并支持模糊搜索；官方插件也可贡献命令。需要你处理时可一键跳转。设置中可搜索并自定义快捷键。",
       mruBadge: "最近使用",
       paletteQuery: "切换主题",
       groups: ["视图", "面板", "文件"],
@@ -96,10 +96,10 @@
       shortcuts: [
         { keys: "⇧⌘P", label: "命令面板" },
         { keys: "⌘P", label: "快速打开文件" },
-        { keys: "⌘T", label: "新建标签" },
+        { keys: "⌘T", label: "新建终端" },
         { keys: "⌘D", label: "分屏" },
-        { keys: "⌘B", label: "折叠侧栏" },
-        { keys: "⌘F", label: "终端搜索" },
+        { keys: "⌘⇧Y", label: "下一个需要你处理" },
+        { keys: "⌘F", label: "面板内查找" },
       ],
     },
   },
@@ -162,8 +162,8 @@
       footnote: "macOS · Swift / Zig / libghostty",
     },
     keys: {
-      title: "Everything is ⇧⌘P away",
-      note: "The command palette gathers every action: fuzzy search ranked by recent use, and official plugins can contribute commands. Search shortcuts in Settings and remap bindings freely.",
+      title: "Search any command. Jump with one key",
+      note: "The command palette ranks actions by recent use and fuzzy search. Official plugins can add commands. Jump to sessions that need attention with one key. Search and remap shortcuts in Settings.",
       mruBadge: "Recent",
       paletteQuery: "Switch theme",
       groups: ["View", "Panels", "Files"],
@@ -171,10 +171,10 @@
       shortcuts: [
         { keys: "⇧⌘P", label: "Command palette" },
         { keys: "⌘P", label: "Quick Open file" },
-        { keys: "⌘T", label: "New tab" },
+        { keys: "⌘T", label: "New terminal" },
         { keys: "⌘D", label: "Split pane" },
-        { keys: "⌘B", label: "Toggle sidebar" },
-        { keys: "⌘F", label: "Find in terminal" },
+        { keys: "⌘⇧Y", label: "Next needing attention" },
+        { keys: "⌘F", label: "Find in panel" },
       ],
     },
   },
@@ -237,8 +237,8 @@
       footnote: "macOS · Swift / Zig / libghostty",
     },
     keys: {
-      title: "すべては ⇧⌘P から",
-      note: "コマンドパレットにすべてのアクションを集約：あいまい検索と最近使用順の並び替えに対応し、公式プラグインもコマンドを提供できます。設定ではショートカットを検索でき、割り当ては自由に変更できます。",
+      title: "コマンドは検索、急ぎはワンキーで移動",
+      note: "コマンドパレットは最近使用順とあいまい検索でアクションを集め、公式プラグインもコマンドを提供できます。対応が必要なセッションへはワンキーでジャンプできます。設定ではショートカットを検索でき、割り当ては自由に変更できます。",
       mruBadge: "最近使用",
       paletteQuery: "テーマを切り替え",
       groups: ["表示", "パネル", "ファイル"],
@@ -246,10 +246,10 @@
       shortcuts: [
         { keys: "⇧⌘P", label: "コマンドパレット" },
         { keys: "⌘P", label: "クイックオープン" },
-        { keys: "⌘T", label: "新規タブ" },
+        { keys: "⌘T", label: "新規ターミナル" },
         { keys: "⌘D", label: "ペイン分割" },
-        { keys: "⌘B", label: "サイドバー切替" },
-        { keys: "⌘F", label: "ターミナル内検索" },
+        { keys: "⌘⇧Y", label: "次の対応が必要なエージェントへ" },
+        { keys: "⌘F", label: "パネル内検索" },
       ],
     },
   },
@@ -312,8 +312,8 @@
       footnote: "macOS · Swift / Zig / libghostty",
     },
     keys: {
-      title: "모든 것은 ⇧⌘P에서",
-      note: "커맨드 팔레트에 모든 동작을 모았습니다: 최근 사용 순으로 정렬되는 퍼지 검색, 공식 플러그인도 명령을 제공할 수 있습니다. 설정에서 단축키를 검색하고 자유롭게 재배정하세요.",
+      title: "명령은 검색, 급한 일은 바로 이동",
+      note: "커맨드 팔레트는 최근 사용 순 퍼지 검색으로 동작을 모으고, 공식 플러그인도 명령을 제공할 수 있습니다. 처리가 필요한 세션은 바로 이동합니다. 설정에서 단축키를 검색하고 자유롭게 재배정하세요.",
       mruBadge: "최근 사용",
       paletteQuery: "테마 전환",
       groups: ["보기", "패널", "파일"],
@@ -321,10 +321,10 @@
       shortcuts: [
         { keys: "⇧⌘P", label: "커맨드 팔레트" },
         { keys: "⌘P", label: "빠른 파일 열기" },
-        { keys: "⌘T", label: "새 탭" },
+        { keys: "⌘T", label: "새 터미널" },
         { keys: "⌘D", label: "창 분할" },
-        { keys: "⌘B", label: "사이드바 전환" },
-        { keys: "⌘F", label: "터미널 내 검색" },
+        { keys: "⌘⇧Y", label: "처리가 필요한 다음으로" },
+        { keys: "⌘F", label: "패널에서 찾기" },
       ],
     },
   },
