@@ -16,6 +16,7 @@ export const ja: Dict = {
     cli: "CLI とプラグイン",
     download: "ダウンロード",
     faq: "FAQ",
+    docs: "ドキュメント",
     blog: "ブログ",
     github: "GitHub",
   },

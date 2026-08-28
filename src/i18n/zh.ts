@@ -14,6 +14,7 @@ export const zh = {
     cli: "CLI 与插件",
     download: "下载",
     faq: "FAQ",
+    docs: "文档",
     blog: "博客",
     github: "GitHub",
   },

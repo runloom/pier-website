@@ -16,6 +16,7 @@ export const en: Dict = {
     cli: "CLI & plugins",
     download: "Download",
     faq: "FAQ",
+    docs: "Docs",
     blog: "Blog",
     github: "GitHub",
   },
