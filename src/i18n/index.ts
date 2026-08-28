@@ -42,9 +42,9 @@ export function localeHome(locale: Locale): string {
   return locale === "zh" ? withBase("/") : withBase(`/${locale}/`);
 }
 
-/** 博客首页路径（ja/ko 暂无翻译内容，先指向英文博客）。 */
+/** 博客首页路径（zh 无前缀，其余语言带前缀）。 */
 export function blogHome(locale: Locale): string {
-  return locale === "zh" ? withBase("/blog/") : withBase("/en/blog/");
+  return locale === "zh" ? withBase("/blog/") : withBase(`/${locale}/blog/`);
 }
 
 export function htmlLang(locale: Locale): string {

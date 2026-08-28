@@ -23,9 +23,11 @@ interface Props {
   locale: Locale;
   title?: string;
   description?: string;
+  /** 覆盖默认 hreflang（各语言首页）；博客等独立内容用同 slug 互指 */
+  hreflangUrls?: Partial<Record<Locale, string>>;
 }
 
-const { locale, title, description } = Astro.props;
+const { locale, title, description, hreflangUrls } = Astro.props;
 const dict = getDict(locale);
 const pageTitle = title ?? dict.meta.title;
 const pageDescription = description ?? dict.meta.description;
@@ -35,6 +37,14 @@ const canonical = new URL(Astro.url.pathname, site);
 const localeUrls = Object.fromEntries(
   LOCALES.map((item) => [item, new URL(localeHome(item), site).href])
 ) as Record<Locale, string>;
+const alternateUrls = hreflangUrls
+  ? (Object.fromEntries(
+      LOCALES.map((item) => [
+        item,
+        hreflangUrls[item] ? new URL(hreflangUrls[item]!, site).href : undefined,
+      ])
+    ) as Partial<Record<Locale, string>>)
+  : localeUrls;
 const ogImage = new URL(withBase("/og.png"), site);
 const otherLocales = LOCALES.filter((item) => item !== locale);
 
@@ -92,10 +102,10 @@ const jsonLd = JSON.stringify({
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7fb" />
 
     <link rel="canonical" href={canonical.href} />
-    {LOCALES.map((item) => (
-      <link rel="alternate" hreflang={LOCALE_META[item].hreflang} href={localeUrls[item]} />
+    {LOCALES.filter((item) => alternateUrls[item]).map((item) => (
+      <link rel="alternate" hreflang={LOCALE_META[item].hreflang} href={alternateUrls[item]} />
     ))}
-    <link rel="alternate" hreflang="x-default" href={localeUrls.zh} />
+    <link rel="alternate" hreflang="x-default" href={alternateUrls.zh ?? localeUrls.zh} />
     <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
 
     <link rel="preload" as="font" type="font/woff2" href={archivoLatinWoff2} crossorigin />

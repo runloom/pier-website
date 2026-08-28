@@ -7,9 +7,15 @@ const posts = (await getCollection("blog", ({ data }) => data.lang === "zh")).so
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 const fmt = new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium" });
+const hreflangUrls = {
+  zh: withBase("/blog/"),
+  en: withBase("/en/blog/"),
+  ja: withBase("/ja/blog/"),
+  ko: withBase("/ko/blog/"),
+};
 ---
 
-<Base locale="zh" title="博客 · Pier" description="Pier 的更新日志与文章">
+<Base locale="zh" title="博客 · Pier" description="Pier 的更新日志与文章" hreflangUrls={hreflangUrls}>
   <section class="mx-auto max-w-3xl px-5 py-16">
     <p class="section-label"><em>Blog</em>更新与文章</p>
     <h1 class="display mt-4 text-3xl sm:text-4xl">Pier 博客</h1>
