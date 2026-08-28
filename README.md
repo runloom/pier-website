@@ -10,8 +10,8 @@
 ```bash
 pnpm install
 pnpm dev        # http://localhost:4321/
-pnpm check      # astro check（类型与模板诊断）
-pnpm build      # 产出 dist/
+pnpm check      # Astro 诊断 + 品牌资源新鲜度检查
+pnpm build      # 检查品牌资源，产出并复核 dist/
 pnpm preview    # 本地预览构建产物
 ```
 
@@ -25,8 +25,23 @@ src/
 ├── assets/hero.png        # 首屏产品截图（构建时由 astro:assets 出多尺寸）
 ├── components/            # Hero、Workflow、Features、Download 等区块
 └── pages/                 # /（中文）、/en/、/404
-scripts/generate-og.mjs    # 生成 public/og.png（改文案后重跑并提交产物）
+scripts/generate-*.mjs     # 从 public/logo.svg 生成全部站点图标与 OG
 ```
+
+## 品牌图标
+
+`public/logo.svg` 是官网唯一品牌源，内容与 Pier 主仓库的
+`build/app-icon-source.svg` 逐字节一致。Header、Footer、favicon、Apple Touch 与 OG
+都由它生成；不要分别手改派生资源。
+
+同步主仓图标后运行：
+
+```bash
+pnpm brand:generate
+PIER_APP_ICON_SOURCE=../pier/build/app-icon-source.svg pnpm test:brand
+```
+
+`pnpm build` 还会验证 `dist/` 中的品牌文件及所有页面引用，避免部署旧图标。
 
 ## 国际化
 

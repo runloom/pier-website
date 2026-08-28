@@ -6,9 +6,14 @@
   "description": "Pier 官网 — 本地 AI 开发工作台",
   "scripts": {
     "dev": "astro dev",
+    "brand:generate": "node scripts/generate-favicon.mjs && node scripts/generate-og.mjs",
+    "test:brand": "node --test tests/brand-assets.test.mjs",
+    "test:brand:dist": "node --test tests/brand-dist.test.mjs",
+    "prebuild": "pnpm test:brand",
     "build": "astro build",
+    "postbuild": "pnpm test:brand:dist",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check && pnpm test:brand"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

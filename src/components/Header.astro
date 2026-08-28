@@ -1,5 +1,5 @@
 ---
-import { blogHome, getDict, localeHome, REPO, withBase, type Locale } from "../i18n";
+import { blogHome, getDict, localeHash, localeHome, REPO, withBase, type Locale } from "../i18n";
 import LangSwitcher from "./LangSwitcher.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
@@ -9,15 +9,16 @@ interface Props {
 
 const { locale } = Astro.props;
 const dict = getDict(locale);
+const blogHref = blogHome(locale);
+const onBlog = /(^|\/)blog(\/|$)/.test(Astro.url.pathname);
 
-const nav = [
-  { href: "#why", label: dict.nav.why },
-  { href: "#workflow", label: dict.nav.workflow },
-  { href: "#performance", label: dict.nav.performance },
-  { href: "#features", label: dict.nav.features },
-  { href: "#cli", label: dict.nav.cli },
-  { href: "#faq", label: dict.nav.faq },
-  { href: blogHome(locale), label: dict.nav.blog },
+const sections = [
+  { href: localeHash(locale, "why"), label: dict.nav.why },
+  { href: localeHash(locale, "workflow"), label: dict.nav.workflow },
+  { href: localeHash(locale, "performance"), label: dict.nav.performance },
+  { href: localeHash(locale, "features"), label: dict.nav.features },
+  { href: localeHash(locale, "cli"), label: dict.nav.cli },
+  { href: localeHash(locale, "faq"), label: dict.nav.faq },
 ];
 ---
 
@@ -26,13 +27,13 @@ const nav = [
 >
   <div class="relative mx-auto flex h-14 max-w-6xl items-center gap-6 overflow-visible px-5">
     <a href={localeHome(locale)} class="flex items-center gap-2.5" aria-label="Pier">
-      <img src={withBase("/mark.svg")} alt="" width="48" height="36" class="block h-9 w-auto shrink-0" />
+      <img src={withBase("/mark.svg")} alt="" width="36" height="36" class="block size-9 shrink-0" />
       <span class="display-wide text-[15px] tracking-[0.16em]">PIER</span>
     </a>
 
     <nav class="hidden items-center gap-5 font-mono text-[13px] text-muted lg:flex" aria-label="Main">
       {
-        nav.map((item) => (
+        sections.map((item) => (
           <a href={item.href} class="transition-colors hover:text-fg">
             {item.label}
           </a>
@@ -58,7 +59,20 @@ const nav = [
         </svg>
       </a>
 
-      <a href="#download" class="btn btn-primary ml-1.5 hidden !px-3.5 !py-2 text-[13px] sm:inline-flex">
+      <span class="mx-1 hidden h-4 w-px bg-line sm:block" aria-hidden="true"></span>
+
+      <a
+        href={blogHref}
+        aria-current={onBlog ? "page" : undefined}
+        class:list={[
+          "hidden font-mono text-[13px] transition-colors hover:text-fg sm:inline",
+          onBlog ? "text-fg" : "text-muted",
+        ]}
+      >
+        {dict.nav.blog}
+      </a>
+
+      <a href={localeHash(locale, "download")} class="btn btn-primary ml-1.5 hidden !px-3.5 !py-2 text-[13px] sm:inline-flex">
         {dict.nav.download}
       </a>
     </div>

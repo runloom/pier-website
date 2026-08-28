@@ -1,99 +1,81 @@
-// 从 public/logo.svg 生成紧裁切的站标：
-//   public/mark.svg            横向紧裁，给页头 / 页脚
-//   public/favicon.svg         方形居中，铺满标签栏
-//   public/favicon-32.png      PNG 回退
-//   public/apple-touch-icon.png  180×180，深色底
-//
-// 改 logo.svg 后重跑：node scripts/generate-favicon.mjs
-import { readFile, writeFile } from "node:fs/promises";
+// Generate every website icon from public/logo.svg, which must stay a
+// byte copy of pier/build/app-icon-source.svg. Use --out-dir for tests.
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const logoPath = new URL("../public/logo.svg", import.meta.url);
-const logoRaw = await readFile(logoPath, "utf8");
 
-const VIEW_W = 210;
-const VIEW_H = 170;
-const TRIM_ALPHA = 12;
-
-const { data, info } = await sharp(Buffer.from(logoRaw), { density: 400 })
-  .ensureAlpha()
-  .raw()
-  .toBuffer({ resolveWithObject: true });
-
-const { width, height, channels } = info;
-let minX = width;
-let minY = height;
-let maxX = 0;
-let maxY = 0;
-
-for (let y = 0; y < height; y++) {
-  for (let x = 0; x < width; x++) {
-    const a = data[(y * width + x) * channels + 3];
-    if (a > TRIM_ALPHA) {
-      if (x < minX) minX = x;
-      if (y < minY) minY = y;
-      if (x > maxX) maxX = x;
-      if (y > maxY) maxY = y;
-    }
-  }
-}
-
-const inkX = (VIEW_W * minX) / width;
-const inkY = (VIEW_H * minY) / height;
-const inkW = (VIEW_W * (maxX - minX + 1)) / width;
-const inkH = (VIEW_H * (maxY - minY + 1)) / height;
-
-function withViewBox(svg, viewBox, sizeW, sizeH) {
+function withRoot(svg, { height, viewBox, width }) {
   return svg.replace(
-    /^<svg [^>]*>/,
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${sizeW}" height="${sizeH}" role="img" aria-label="Pier">`
+    /<svg\b[^>]*>/,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${width}" height="${height}">`
   );
 }
 
-function fmt(n) {
-  return n.toFixed(3).replace(/\.?0+$/, "");
+const OPTICAL_VIEWBOX = "102 102 820 820";
+
+export async function generateFaviconAssets(options = {}) {
+  const outputDirectory = resolve(options.outputDirectory ?? join(root, "public"));
+  const logoPath = resolve(options.logoPath ?? join(root, "public", "logo.svg"));
+  const logoRaw = await readFile(logoPath, "utf8");
+  if (!/<svg\b[^>]*viewBox="0 0 1024 1024"/.test(logoRaw)) {
+    throw new Error("public/logo.svg must use the canonical 0 0 1024 1024 viewBox");
+  }
+  if (/<(?:image|use)\b[^>]*(?:href|xlink:href)=/i.test(logoRaw)) {
+    throw new Error("public/logo.svg must remain self-contained");
+  }
+  await mkdir(outputDirectory, { recursive: true });
+
+  const markSvg = withRoot(logoRaw, {
+    height: 36,
+    viewBox: OPTICAL_VIEWBOX,
+    width: 36,
+  });
+  const faviconSvg = withRoot(logoRaw, {
+    height: 32,
+    viewBox: OPTICAL_VIEWBOX,
+    width: 32,
+  });
+
+  await Promise.all([
+    writeFile(join(outputDirectory, "mark.svg"), markSvg),
+    writeFile(join(outputDirectory, "favicon.svg"), faviconSvg),
+    sharp(Buffer.from(faviconSvg), { density: 384 })
+      .resize(32, 32)
+      .png()
+      .toFile(join(outputDirectory, "favicon-32.png")),
+    sharp(Buffer.from(faviconSvg), { density: 384 })
+      .resize(16, 16)
+      .png()
+      .toFile(join(outputDirectory, "favicon-16.png")),
+    sharp(Buffer.from(faviconSvg), { density: 384 })
+      .resize(180, 180)
+      .flatten({ background: { r: 20, g: 24, b: 32 } })
+      .png()
+      .toFile(join(outputDirectory, "apple-touch-icon.png")),
+  ]);
 }
 
-function viewBoxRect(x, y, w, h) {
-  return `${fmt(x)} ${fmt(y)} ${fmt(w)} ${fmt(h)}`;
+function outputDirectoryFromArgs(args) {
+  const outputFlag = args.indexOf("--out-dir");
+  if (outputFlag < 0) {
+    return undefined;
+  }
+  const outputDirectory = args[outputFlag + 1];
+  if (!outputDirectory) {
+    throw new Error("--out-dir requires a directory path");
+  }
+  return outputDirectory;
 }
 
-function paddedRect(x, y, w, h, padRatio) {
-  const px = w * padRatio;
-  const py = h * padRatio;
-  return [x - px, y - py, w + px * 2, h + py * 2];
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const outputDirectory = outputDirectoryFromArgs(process.argv.slice(2));
+  await generateFaviconAssets(
+    outputDirectory ? { outputDirectory } : undefined
+  );
+  console.log(
+    `Generated favicon assets in ${resolve(outputDirectory ?? join(root, "public"))}`
+  );
 }
-
-function coverSquare(x, y, w, h, fill) {
-  // 以较长边铺满方形（contain）：完整保留左右坞臂，标签栏里仍够大。
-  const side = Math.max(w, h) / fill;
-  return [x + w / 2 - side / 2, y + h / 2 - side / 2, side, side];
-}
-
-const markVb = viewBoxRect(...paddedRect(inkX, inkY, inkW, inkH, 0.03));
-const faviconVb = viewBoxRect(...coverSquare(inkX, inkY, inkW, inkH, 0.88));
-
-const markSvg = withViewBox(logoRaw, markVb, 48, 36);
-const faviconSvg = withViewBox(logoRaw, faviconVb, 32, 32);
-
-await writeFile(`${root}public/mark.svg`, markSvg);
-await writeFile(`${root}public/favicon.svg`, faviconSvg);
-
-await sharp(Buffer.from(faviconSvg), { density: 384 })
-  .resize(32, 32)
-  .png()
-  .toFile(`${root}public/favicon-32.png`);
-
-await sharp(Buffer.from(faviconSvg), { density: 384 })
-  .resize(180, 180)
-  .flatten({ background: { r: 7, g: 11, b: 21 } })
-  .png()
-  .toFile(`${root}public/apple-touch-icon.png`);
-
-console.log("favicon assets generated", {
-  ink: { inkX, inkY, inkW, inkH },
-  markVb,
-  faviconVb,
-});

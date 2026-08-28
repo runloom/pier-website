@@ -42,6 +42,11 @@ export function localeHome(locale: Locale): string {
   return locale === "zh" ? withBase("/") : withBase(`/${locale}/`);
 }
 
+/** 某 locale 首页区块锚点。带上首页路径，博客等内页点击后回到对应区块。 */
+export function localeHash(locale: Locale, id: string): string {
+  return `${localeHome(locale)}#${id}`;
+}
+
 /** 博客首页路径（zh 无前缀，其余语言带前缀）。 */
 export function blogHome(locale: Locale): string {
   return locale === "zh" ? withBase("/blog/") : withBase(`/${locale}/blog/`);
