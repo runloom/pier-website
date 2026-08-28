@@ -14,7 +14,7 @@ const publicDirectory = join(root, "public");
 const faviconGenerator = join(root, "scripts", "generate-favicon.mjs");
 const ogGenerator = join(root, "scripts", "generate-og.mjs");
 const approvedSourceHash =
-  "146b1894c407d2d50cef919c5ce6d6d5983ab56247453e623729e0223264d2d8";
+  "82eec7b03f2067db086ffdbb9e1d0480f549c00843147de3ef52a9fd3297b488";
 const derivedAssets = [
   "mark.svg",
   "favicon.svg",
