@@ -37,3 +37,15 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+  submit-indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      # 部署完成后通知 Bing/Yandex/Naver/Seznam 立即重新抓取
+      # key 与 keyLocation 必须公开在站点上，不属于机密
+      - name: Notify IndexNow of fresh URLs
+        run: |
+          curl -fsS -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            --data '{"host":"pier.codes","key":"020d8add8d2849fe939892a337f30263","keyLocation":"https://pier.codes/020d8add8d2849fe939892a337f30263.txt","urlList":["https://pier.codes/","https://pier.codes/en/","https://pier.codes/ja/","https://pier.codes/ko/"]}'
