@@ -14,6 +14,7 @@ export const zh = {
     cli: "CLI 与插件",
     download: "下载",
     faq: "FAQ",
+    blog: "博客",
     github: "GitHub",
   },
   hero: {
@@ -240,6 +241,7 @@ export const zh = {
       download: "下载",
       releases: "Releases",
       changelog: "变更日志",
+      blog: "博客",
       docsIndex: "文档索引",
       cliManual: "CLI 用户手册",
       plugins: "官方插件",

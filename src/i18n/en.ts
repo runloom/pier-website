@@ -16,6 +16,7 @@ export const en: Dict = {
     cli: "CLI & plugins",
     download: "Download",
     faq: "FAQ",
+    blog: "Blog",
     github: "GitHub",
   },
   hero: {
@@ -242,6 +243,7 @@ export const en: Dict = {
       download: "Download",
       releases: "Releases",
       changelog: "Changelog",
+      blog: "Blog",
       docsIndex: "Documentation",
       cliManual: "CLI manual",
       plugins: "Official plugins",

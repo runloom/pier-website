@@ -16,6 +16,7 @@ export const ja: Dict = {
     cli: "CLI とプラグイン",
     download: "ダウンロード",
     faq: "FAQ",
+    blog: "ブログ",
     github: "GitHub",
   },
   hero: {
@@ -242,6 +243,7 @@ export const ja: Dict = {
       download: "ダウンロード",
       releases: "Releases",
       changelog: "変更履歴",
+      blog: "ブログ",
       docsIndex: "文書索引",
       cliManual: "CLI マニュアル",
       plugins: "公式プラグイン",

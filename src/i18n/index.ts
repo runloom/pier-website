@@ -37,10 +37,14 @@ export const BASE = import.meta.env.BASE_URL.replace(/\/+$/, "");
 export function withBase(path: string): string {
   return `${BASE}${path.startsWith("/") ? path : `/${path}`}`;
 }
-
 /** 某 locale 的首页路径（zh 为默认语言，不带前缀）。 */
 export function localeHome(locale: Locale): string {
   return locale === "zh" ? withBase("/") : withBase(`/${locale}/`);
+}
+
+/** 博客首页路径（ja/ko 暂无翻译内容，先指向英文博客）。 */
+export function blogHome(locale: Locale): string {
+  return locale === "zh" ? withBase("/blog/") : withBase("/en/blog/");
 }
 
 export function htmlLang(locale: Locale): string {

@@ -16,6 +16,7 @@ export const ko: Dict = {
     cli: "CLI와 플러그인",
     download: "다운로드",
     faq: "FAQ",
+    blog: "블로그",
     github: "GitHub",
   },
   hero: {
@@ -242,6 +243,7 @@ export const ko: Dict = {
       download: "다운로드",
       releases: "Releases",
       changelog: "변경 로그",
+      blog: "블로그",
       docsIndex: "문서 색인",
       cliManual: "CLI 매뉴얼",
       plugins: "공식 플러그인",
