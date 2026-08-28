@@ -28,6 +28,15 @@ function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+function meanAbsDiff(left, right) {
+  assert.equal(left.length, right.length, "og.png region size mismatch");
+  let sum = 0;
+  for (let i = 0; i < left.length; i++) {
+    sum += Math.abs(left[i] - right[i]);
+  }
+  return sum / left.length;
+}
+
 function svgBody(source) {
   return source
     .replace(/^<\?xml[^>]*>\s*/, "")
@@ -88,9 +97,10 @@ test(
           `${asset} is stale`
         );
       }
-      // System font fallback changes text antialiasing across macOS/Linux.
-      // Compare the deterministic top card region instead: it contains the
-      // complete icon and brand atmosphere but no platform-dependent text.
+      // Body text antialiasing differs across macOS/Linux, so compare the
+      // textless top band. SVG rasterization still differs by platform; use
+      // mean abs diff instead of a byte hash. A stale or swapped icon is far
+      // above this threshold.
       const topCardRegion = { height: 300, left: 0, top: 0, width: 1200 };
       const [generatedOg, committedOg] = await Promise.all([
         sharp(join(output, "og.png")).extract(topCardRegion).raw().toBuffer(),
@@ -99,7 +109,10 @@ test(
           .raw()
           .toBuffer(),
       ]);
-      assert.equal(sha256(generatedOg), sha256(committedOg), "og.png icon is stale");
+      assert.ok(
+        meanAbsDiff(generatedOg, committedOg) < 6,
+        "og.png icon is stale"
+      );
     } finally {
       await rm(output, { force: true, recursive: true });
     }
