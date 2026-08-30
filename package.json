@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "version": "0.1.0",
-  "description": "Pier 官网 — 本地 AI 开发工作台",
+  "description": "Pier 官网 — 几个 AI 终端开着，谁在等你一眼能看见",
   "scripts": {
     "dev": "astro dev",
     "brand:generate": "node scripts/generate-favicon.mjs && node scripts/generate-og.mjs",

@@ -1,6 +1,6 @@
 # Pier 官网
 
-[Pier](https://github.com/runloom/pier)（本地 AI 开发工作台）的官方网站。静态站点，中英双语，明暗双主题，经 GitHub Pages 发布。
+[Pier](https://github.com/runloom/pier) 的官方网站。几个 AI 终端开着，谁在等你一眼能看见。静态站点，中英日韩，明暗双主题，经 GitHub Pages 发布。
 
 - 线上地址：`https://pier.codes`（GitHub Pages 默认地址 `https://runloom.github.io/pier-website/` 会跳转到自定义域名）
 - 技术栈：[Astro](https://astro.build) + Tailwind CSS v4，零框架运行时，仅三处轻量脚本（主题切换 / 语言跟随系统 / 最新版本号获取）
