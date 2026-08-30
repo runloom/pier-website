@@ -41,11 +41,15 @@ const { boundaries } = dict;
       }
     </div>
 
-    <p
-      class="mx-auto mt-12 max-w-2xl text-center font-mono text-[13px] text-brand-ink leading-relaxed"
-      data-reveal
-    >
-      {boundaries.closing}
-    </p>
+    {
+      boundaries.closing ? (
+        <p
+          class="mx-auto mt-12 max-w-2xl text-center font-mono text-[13px] text-brand-ink leading-relaxed"
+          data-reveal
+        >
+          {boundaries.closing}
+        </p>
+      ) : null
+    }
   </div>
 </section>

@@ -52,7 +52,14 @@ const icons = [
                   set:html={icons[i]}
                 />
               </div>
-              <h3 class="display mt-4.5 text-[17px]">{item.title}</h3>
+              <h3 class="mt-4.5 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                <span class="display text-[17px]">{item.title}</span>
+                {"badge" in item && item.badge ? (
+                  <span class="inline-flex rounded-full border border-line-strong bg-panel-2 px-2 py-0.5 font-mono text-[10.5px] tracking-wide text-brand-ink">
+                    {item.badge}
+                  </span>
+                ) : null}
+              </h3>
               <p class="mt-2 text-[13.5px] text-muted leading-relaxed">{item.body}</p>
             </div>
           </article>

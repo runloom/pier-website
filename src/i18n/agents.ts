@@ -1,41 +1,16 @@
 /**
- * 官网跑马灯展示名。顺序对齐 Pier `AGENT_AUTO_PICK_ORDER`，
- * 文案对齐 `AGENT_CATALOG.label`；Claude 对外用产品名 Claude Code。
+ * 官网跑马灯只列命令行工具名。
+ * 不写 Cursor / Devin / Continue 这类看起来像 IDE 或云代理的名字。
  */
 export const AGENT_DISPLAY_NAMES = [
   "Claude Code",
-  "OpenClaude",
-  "CodeBuddy",
-  "Qoder",
   "Codex",
-  "Grok",
-  "GitHub Copilot",
   "OpenCode",
-  "MiMo Code",
-  "Ante",
-  "Pi",
-  "OMP",
-  "Gemini",
-  "Antigravity",
+  "Grok",
+  "Gemini CLI",
+  "Copilot CLI",
   "Aider",
   "Goose",
   "Amp",
-  "Kilocode",
-  "Kiro",
-  "Charm",
-  "Auggie",
-  "Autohand Code",
-  "Cline",
-  "Codebuff",
-  "Command Code",
-  "Continue",
-  "Cursor",
-  "Droid",
-  "Kimi",
-  "Mistral Vibe",
-  "Qwen Code",
-  "Rovo Dev",
-  "Hermes",
-  "OpenClaw",
-  "Devin",
+  "Pi",
 ] as const;

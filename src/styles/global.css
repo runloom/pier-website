@@ -537,8 +537,33 @@ body {
 }
 
 /* 首屏产品截图：跟随圆角透明边做投影，避免再套一层假窗口 */
+.hero-shot picture {
+  aspect-ratio: 12 / 7;
+  display: block;
+  width: 100%;
+}
+
 .hero-shot-img {
   filter: drop-shadow(0 28px 64px color-mix(in oklab, #030610 62%, transparent));
+}
+
+/* 图还没就绪时不单独露出标注，避免先出现浮层、后出现截图 */
+.hero-shot picture,
+.hero-shot .hero-callouts {
+  opacity: 0;
+}
+
+.hero-shot.is-ready picture,
+.hero-shot.is-ready .hero-callouts {
+  opacity: 1;
+  transition: opacity 0.45s var(--ease-out-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shot.is-ready picture,
+  .hero-shot.is-ready .hero-callouts {
+    transition: none;
+  }
 }
 
 /* 滚动条（桌面 WebKit / Firefox） */

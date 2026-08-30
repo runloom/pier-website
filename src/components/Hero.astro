@@ -9,6 +9,11 @@ interface Props {
 
 const { locale } = Astro.props;
 const dict = getDict(locale);
+const calloutPos = [
+  "top-[10%] left-[3%] max-w-[34%]",
+  "top-[58%] left-[3%] max-w-[34%]",
+  "top-[11%] left-[66%] max-w-[30%]",
+];
 ---
 
 <section class="relative isolate overflow-hidden">
@@ -19,17 +24,17 @@ const dict = getDict(locale);
   <div class="relative mx-auto max-w-6xl px-5 pt-20 pb-24 sm:pt-28">
     <div class="intro mx-auto flex max-w-3xl flex-col items-center text-center">
       <p
-        class="inline-flex items-center gap-2 break-keep rounded-full border border-line-strong bg-panel/70 px-3.5 py-1.5 font-mono text-[11.5px] text-muted"
+        class="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-line-strong bg-panel/70 px-3.5 py-1.5 font-mono text-[11.5px] text-muted"
       >
         <span class="dot text-done"></span>
         {dict.hero.badge}
       </p>
 
-      <h1 class="display mt-7 text-[44px] leading-[1.04] sm:text-[64px]">
+      <h1 class="display mt-7 max-w-[20em] text-[34px] leading-[1.12] sm:text-[52px]">
         {dict.hero.title}
       </h1>
 
-      <p class="prose-measure mt-6 text-[16.5px] text-muted leading-relaxed sm:text-lg">
+      <p class="prose-measure mt-6 break-keep text-[16.5px] text-muted leading-relaxed sm:text-lg">
         {dict.hero.sub}
       </p>
 
@@ -55,7 +60,7 @@ const dict = getDict(locale);
       <p class="mt-5 font-mono text-[12px] text-faint">{dict.hero.hint}</p>
     </div>
 
-    <div class="hero-shot relative mx-auto mt-16 max-w-6xl">
+    <div class="hero-shot relative mx-auto mt-16 max-w-6xl" data-hero-shot>
       <Picture
         src={heroShot}
         alt={dict.hero.shotAlt}
@@ -68,10 +73,62 @@ const dict = getDict(locale);
         class="hero-shot-img relative z-10 h-auto w-full"
         pictureAttributes={{ class: "block w-full" }}
       />
+      <ol class="hero-callouts pointer-events-none absolute inset-0 z-20 hidden lg:block" aria-hidden="true">
+        {
+          dict.hero.callouts.map((callout, i) => (
+            <li
+              class:list={[
+                "absolute rounded-md border border-line-strong bg-panel/90 px-2.5 py-1.5 font-mono text-[12px] text-fg shadow-[var(--shadow-panel)] backdrop-blur-sm",
+                calloutPos[i],
+              ]}
+            >
+              <span class="mr-2 text-brand-ink tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+              {callout.label}
+            </li>
+          ))
+        }
+      </ol>
       <div
         class="-bottom-10 pointer-events-none absolute inset-x-10 h-10 rounded-[100%] bg-[radial-gradient(50%_100%_at_50%_0%,rgba(133,73,255,0.28),transparent_70%)] blur-md"
       >
       </div>
+      <ol class="hero-callouts mx-auto mt-6 grid max-w-xl gap-2 lg:hidden" aria-hidden="true">
+        {
+          dict.hero.callouts.map((callout, i) => (
+            <li class="flex items-center gap-3 rounded-lg border border-line bg-panel/70 px-3 py-2 text-[13px] text-muted">
+              <span class="font-mono text-[12px] text-brand-ink tabular-nums">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              {callout.label}
+            </li>
+          ))
+        }
+      </ol>
+      <script is:inline>
+        (() => {
+          const shot = document.currentScript?.parentElement;
+          if (!shot) return;
+          const img = shot.querySelector("img");
+          const ready = () => shot.classList.add("is-ready");
+          if (!img) {
+            ready();
+            return;
+          }
+          if (img.complete && img.naturalWidth > 0) ready();
+          else {
+            img.addEventListener("load", ready, { once: true });
+            img.addEventListener("error", ready, { once: true });
+          }
+        })();
+      </script>
+      <noscript>
+        <style>
+          .hero-shot picture,
+          .hero-shot .hero-callouts {
+            opacity: 1 !important;
+          }
+        </style>
+      </noscript>
     </div>
   </div>
 </section>
