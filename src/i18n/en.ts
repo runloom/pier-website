@@ -5,11 +5,11 @@ export const en: Dict = {
   meta: {
     title: "Pier — The local AI dev workbench",
     description:
-      "A few AI terminals open — see who is waiting on you. Claude Code and Codex stay in their own terminals; edit files and handle Git beside them. Free and open source for macOS.",
+      "A few AI terminals open — see who is waiting on you. Claude Code and Codex stay in their own terminals; edit files and review Git beside them. Free and open source for macOS.",
     ogAlt: "Pier — The local AI dev workbench",
   },
   nav: {
-    why: "Why",
+    why: "Why Pier",
     workflow: "Workflow",
     performance: "Performance",
     features: "Features",
@@ -31,17 +31,17 @@ export const en: Dict = {
     hint: "Free and open source · macOS only",
     callouts: [
       { label: "The original terminal, not a chat" },
-      { label: "Another session still running" },
-      { label: "Git review, beside it" },
+      { label: "Another session still running — in view" },
+      { label: "Git review, right beside it" },
     ],
   },
   agents: {
-    label: "These CLIs run as they already do",
+    label: "These command lines run as they already do",
   },
   why: {
     no: "01",
     label: "Why Pier",
-    title: "A few terminals open. See who needs you.",
+    title: "The same terminal. Edit and commit beside it.",
     lead: "Claude Code stays in its original terminal. Who is running, who is asking, who errored — click and go back. Edit files and review Git right beside it.",
     points: [
       {
@@ -53,8 +53,8 @@ export const en: Dict = {
         body: "Running, needs you, and error sessions in one place. Click to jump back — no hunting through tabs.",
       },
       {
-        title: "Edit and Git without another window",
-        body: "Open files and edit. Stage by file or hunk, commit, push. A one-line change or a commit doesn't need another editor.",
+        title: "Edit files and review Git without another window",
+        body: "Open files and edit. Stage by file or hunk, commit, push. A one-line change or a Git review doesn't need another editor.",
       },
     ],
   },
@@ -65,7 +65,7 @@ export const en: Dict = {
     steps: [
       {
         title: "Open a CLI",
-        body: "Start Claude Code, Codex, or another command line in a project or Git worktree.",
+        body: "Start Claude Code, Codex, or another command line in a project or a separate directory (a Git worktree).",
       },
       {
         title: "See who needs you",
@@ -85,28 +85,28 @@ export const en: Dict = {
     no: "03",
     label: "Performance & feel",
     title: "Fast comes from the engine. Smooth comes from design.",
-    lead: "The terminal kernel sets the floor; the paths your fingers take set the feel. Pier treats both as product capabilities.",
+    lead: "How fast the terminal can be comes from the engine. How it feels comes from how you search and jump back. Pier works on both.",
     engine: {
-      title: "Ghostty engine, native all the way down",
+      title: "Ghostty engine, drawn natively",
       points: [
         {
           title: "Native rendering",
-          body: "Terminals are driven by Ghostty native (an XCFramework built from Swift / Zig) with GPU-accelerated rendering — heavy output stays smooth under load.",
+          body: "Terminals use the Ghostty engine with GPU rendering. Heavy output still scrolls smoothly.",
         },
         {
           title: "Sessions outlive the UI",
-          body: "After a UI reload, running terminals remain usable.",
+          body: "After a refresh or a restart, running terminals stay connected.",
         },
         {
-          title: "Polished for agent TUIs",
-          body: "Pier maintains its own set of Ghostty patches for details that matter to agent work — cursor visibility, input focus handoff, and friends.",
+          title: "Polished for command-line UIs",
+          body: "Whether the cursor shows, and where typing goes — the details that make Claude Code and Codex usable — Pier fixes in the engine.",
         },
       ],
-      footnote: "macOS · Swift / Zig / libghostty",
+      footnote: "Native macOS terminal · Ghostty",
     },
     keys: {
       title: "Search any command. Jump with one key",
-      note: "The command palette ranks actions by recent use and fuzzy search. Open files, stage, commit, and branch from there. Jump to sessions that need attention with one key. Search and remap shortcuts in Settings.",
+      note: "The command palette ranks by recent use and supports fuzzy search. Open files, stage, commit, and switch branches from there. Jump to a session that needs you with one key. Search and remap shortcuts in Settings.",
       placeholder: "Search commands…",
       rows: [
         { group: "Git", title: "Commit", keys: "" },
@@ -117,7 +117,7 @@ export const en: Dict = {
         { keys: "⇧⌘P", label: "Command palette" },
         { keys: "⌘P", label: "Quick Open file" },
         { keys: "⌘T", label: "New terminal" },
-        { keys: "⌘⇧Y", label: "Next needing attention" },
+        { keys: "⌘⇧Y", label: "Next session that needs you" },
         { keys: "⌘D", label: "Split pane" },
         { keys: "⌘F", label: "Find in panel" },
       ],
@@ -125,12 +125,12 @@ export const en: Dict = {
   },
   features: {
     no: "04",
-    label: "Core capabilities",
-    title: "Terminals, editing, Git, and Canvas",
+    label: "Core features",
+    title: "Terminals, editing, Git, and a canvas",
     items: [
       {
         title: "Native terminals",
-        body: "A native terminal built on the Ghostty engine with GPU-accelerated rendering. Run shells and CLI coding agents inside projects or worktrees — running sessions survive UI reloads.",
+        body: "A native terminal with GPU rendering. Run shells and CLIs like Claude Code and Codex in a project or a separate directory. Running sessions stay usable after a UI refresh.",
       },
       {
         title: "Session status",
@@ -142,11 +142,11 @@ export const en: Dict = {
       },
       {
         title: "Files, editing, and Git",
-        body: "Open and edit project files. Review diffs, stage by file or hunk; commit, push, branch, and stash from the command palette.",
+        body: "Open and edit project files. Review diffs, stage by file or hunk; commit, push, switch branches, and stash from the command palette.",
       },
       {
         title: "Canvas",
-        body: "Pages saved with the project work now. Boards and run graphs built from terminals and status are still being built.",
+        body: "Canvas is a page saved with the project. You can open it now to write notes and arrange content. Boards and run graphs built from terminals and status are still being built.",
       },
       {
         title: "Saveable layouts",
@@ -157,29 +157,29 @@ export const en: Dict = {
   cli: {
     no: "05",
     label: "Local CLI & plugins",
-    title: "Beyond the workbench, there's a command line",
+    title: "There's also a pier command on your machine",
     cliTitle: "pier · control the Pier already running on your machine",
     cliBody:
-      "Use pier to open projects, locate windows and panels, open terminals and send text or keys, and query agents and worktrees. It only connects to the Pier running locally — it's not a remote API.",
+      "Use pier to open projects, find windows and panels, send text or keys to a terminal, and query sessions and separate directories. It only talks to the Pier running on this Mac — it is not a remote service.",
     termLines: [
       { cmd: "pier . --json", note: "# open the current project in Pier" },
-      { cmd: "pier status --json", note: "# query windows, panels, and agent status" },
+      { cmd: "pier status --json", note: "# query windows, panels, and session status" },
       { cmd: "pier panels list --json", note: "# list panels in the current layout" },
     ],
     pluginTitle: "Plugins",
     pluginBody:
-      "Built-in plugins and official signed, verified, version-managed plugins work today. More sources will follow.",
+      "Built-in plugins and official signed, verified plugins work today. Third-party sources are not open yet.",
     readCli: "Read the CLI manual",
     readPlugins: "Read the plugin docs",
   },
   boundaries: {
     label: "Product boundaries",
-    title: "How we choose, for now",
-    lead: "Not a chat window, and not a built-in task system you can't change.",
+    title: "What we don't do, for now",
+    lead: "Not a chat window, and no built-in task list or auto-dispatch.",
     items: [
       {
         title: "No built-in task list or auto-dispatch",
-        body: "The app itself has no task ledger or auto-scheduler. Boards and run graphs belong on Canvas, using terminals and status — that part is still being built.",
+        body: "The app itself has no task list and does not assign work for you. Boards and run graphs belong on the canvas, using terminals and status — that part is still being built.",
       },
       {
         title: "Not a chat window",
@@ -187,7 +187,7 @@ export const en: Dict = {
       },
       {
         title: "Don't lock you in",
-        body: "Leave, and your command lines, accounts, and repos keep working. Built-in and official plugins work today; more sources will follow.",
+        body: "Leave, and your command lines, accounts, and repos keep working.",
       },
     ],
     closing: "",
@@ -195,7 +195,7 @@ export const en: Dict = {
   download: {
     label: "Download",
     title: "Download, then open the CLIs you already use",
-    lead: "Free and open source. Pick a project folder, open the command lines you already use, and edit files or handle Git beside them.",
+    lead: "Free and open source. Pick a project folder, open the command lines you already use, and edit files or review Git beside them.",
     latestPrefix: "Latest release",
     loading: "Fetching the latest release…",
     apple: "Apple Silicon",
@@ -204,9 +204,10 @@ export const en: Dict = {
     fallback: "Browse all releases on GitHub",
     macOnly: "The desktop app currently supports macOS only (Apple Silicon / Intel).",
     cliPathNote:
-      "At launch, if the directory is writable, Pier tries to put pier on your PATH. If it's missing, install it in Settings → Terminal.",
+      "At launch, if the install directory is writable, Pier tries to put the pier command on your PATH. If the command isn't found, install it in Settings → Terminal.",
     sourceTitle: "Or run from source",
-    sourceReqs: "Requires Node ^24.15, pnpm ≥11.12, Xcode Command Line Tools, Homebrew, and zig@0.15.",
+    sourceReqs:
+      "Requires Node ^24.15, pnpm ≥11.12, Xcode Command Line Tools, Homebrew, and zig@0.15. For an existing Git worktree, run pnpm setup:worktree first.",
     sourceLines: [
       "git clone https://github.com/runloom/pier.git",
       "cd pier",
@@ -220,19 +221,19 @@ export const en: Dict = {
     items: [
       {
         q: "Who is Pier for?",
-        a: "People who already run Claude Code, Codex, or OpenCode in a terminal — especially more than one at a time, or who want to edit files and handle Git without jumping to another editor. One session is fine too. If you mostly write code in Cursor chat, this is not that tool.",
+        a: "People who already run Claude Code, Codex, or OpenCode in a terminal — especially more than one at a time, or who want to edit files and review Git without jumping to another editor. One session is fine too; keep the terminal, editing, and Git here. If you mostly write code in Cursor chat, this isn't the tool for you.",
       },
       {
         q: "How is this different from Cursor?",
-        a: "Cursor puts agents in a chat window. Pier leaves them in their original terminals, shows who is waiting, and lets you edit files and review Git beside them.",
+        a: "Cursor puts command lines in a chat window. Pier leaves them in their original terminals, shows who is waiting, and lets you edit files and review Git beside them.",
       },
       {
         q: "How is this different from herdr, cmux, or tmux?",
-        a: "They manage panes and who is waiting. Herdr runs inside the terminal you already use. cmux calls itself just a terminal. Pier is a desktop window where you can also edit files and review Git.",
+        a: "herdr runs inside the terminal you already use: it splits panes and can show who is waiting. cmux is a terminal. tmux only splits panes. Pier is a desktop window, with file editing and Git beside them.",
       },
       {
         q: "How is this different from Orca?",
-        a: "Orca ships tasks and scheduling. Pier does not. Boards and run graphs belong on Canvas — that part is still being built.",
+        a: "Orca ships tasks and scheduling. Pier does not. Boards and run graphs belong on the canvas — that part is still being built.",
       },
       {
         q: "Do I still need VS Code or Zed?",
@@ -240,7 +241,7 @@ export const en: Dict = {
       },
       {
         q: "Does Pier proxy or modify my model requests?",
-        a: "No. Agents run in their own terminals, so your accounts, subscriptions, and configuration keep working as-is.",
+        a: "No. These command lines run in their own terminals, so your accounts, subscriptions, and configuration keep working as-is.",
       },
       {
         q: "Which platforms are supported?",
@@ -248,7 +249,7 @@ export const en: Dict = {
       },
       {
         q: "Where does my data live?",
-        a: "Everything stays local: preferences and layouts are local JSON, terminal output is written to local files, code changes are read live from Git, and secrets go to the system's secure storage.",
+        a: "Everything stays local: preferences and layouts are files on this Mac, terminal output is written locally, code changes are read live from Git, and secrets go to the macOS Keychain.",
       },
     ],
   },
